@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rangkuman BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+
+<body>
+    <nav th:replace="fragments/fragment :: navbar(rangkuman-bkd)"></nav>
+
+    <div class="container-sm p-5" >
+        <div class="row-sm">
+            <br><br><br>
+            <h2 th:text="'Rangkuman BKD'" class="semi-bold-h2"></h2>
+
+            <div class="position-relative d-flex my-4">
+                <table style="border-collapse: collapse; border: none;" class="body-text text-color-base">
+                    <tr>
+                        <td><p style="margin-bottom: 0px">Nama Lengkap &emsp;</p></td>
+                        <td><p th:text="':&ensp;' + ${dosen.namaDosen}" style="margin-bottom: 0px"></p></td>
+                    </tr>
+                    <tr>
+                        <td><p style="margin-bottom: 5px">NIDN &emsp;</p></td>
+                        <div th:if="${dosen.nidn != null}">
+                            <td><p th:text="':&ensp;' + ${dosen.nidn}" style="margin-bottom: 5px"></p></td>
+                        </div>
+                        <div th:unless="${dosen.nidn != null}">
+                            <td><p th:text="':&ensp;' + ' -'" style="margin-bottom: 5px"></p></td>
+                        </div>
+                    </tr>
+                    <tr>
+                        <td><p style="margin-bottom: 0px">Status Dosen &emsp;</p></td>
+                        <td><p style="margin-bottom: 0px">:&ensp; - </p></td>
+                    </tr>
+                    <tr>
+                        <td><p style="margin-bottom: 0px">Tahun Akademik &emsp;</p></td>
+                        <td><p th:text="':&ensp;' + ${currentSemester.namaSemester}" style="margin-bottom: 0px"></p></td>
+                    </tr>
+                </table>
+                <div class="button-atas-kanan" style="position: absolute; bottom:0; right:0">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="container-sm p-5" >
+            <div class="row-sm">
+                <div class="alert alert-warning text-center" role="alert">
+                    <p>Dosen tidak memiliki jabatan struktural, harap berikan jabatan struktural pada halaman biodata terlebih dahulu.</p>
+                    <div class="btn-tengah">
+                        <a class="button-secondary"  href="/biodata/edit">Edit Biodata</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+<!--        <div class="tableFixHead">-->
+<!--            <table class="table-responsive sibkdTable">-->
+<!--                <thead>-->
+<!--                    <tr>-->
+<!--                      -->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                      -->
+<!--                    </tr>-->
+<!--                  </thead>-->
+<!--                  <tbody>-->
+<!--                    <tr>-->
+<!--                        <div>-->
+<!--                            <br>-->
+<!--                            <h4 class="semi-bold-h4" style="color: #152536; display: inline; text-align: center;">Dosen tidak memiliki jabatan struktural, harap berikan jabatan struktural pada halaman biodata terlebih dahulu.</h4>-->
+<!--                        <br><br>-->
+<!--                        <div class="btn-tengah">-->
+<!--                            <a class="button-primary-outline"  href="/biodata">Edit biodata</a>-->
+<!--                        </div>-->
+<!--            </table>-->
+<!--        </div>-->
+    </div>
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

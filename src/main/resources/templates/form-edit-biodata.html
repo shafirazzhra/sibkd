@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Biodata user</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+</head>
+<body>
+    <nav th:replace="fragments/fragment :: navbar(view-biodata)"></nav>
+    <br>
+    <br>
+    <div class="container-fluid pb-5 container-first container-last">
+      <div class="container p-5">
+
+        <div class="row">
+
+          <div class="col-6 col-md-3">
+            <div class="row" style="margin-right:15px;">
+                <div class="">
+                  <img th:unless="${user.dosen.urlFoto == null}" class="float-end mb-3" th:src="${foto}" width="250" height="250" style="object-fit: cover;">
+                  <img th:if="${user.dosen.urlFoto == null}" class="float-end mb-3" src="https://dummyimage.com/sqrpop" width="250" height="250">
+                </div>
+              </div>
+          
+          </div>
+
+      <!-- Biodata -->
+        <div class="col-12 col-md-8">
+            <form th:action="@{/biodata/edit}" th:object="${user}" method="POST">
+                <div class="row">
+                <div class="col-sm-8">
+                    <h1 class="semi-bold-h1 text-color-primary">Biodata</h1>
+                </div>
+                <div class="col-sm-4 ">
+                    <button type="submit" class="button-success float-end" style="display: inline;">Simpan Biodata</button>
+                </div>
+                </div>
+                <br>
+                <input type="hidden" th:field="*{idPengguna}" />
+                <input type="hidden" th:field="*{emailPengguna}" />
+                <table class="table-responsive sibkdTable">
+                <tbody>
+
+                    <tr>
+                        <td style="width: 35%;">Nama Lengkap</td>
+                        <td>
+                            <input type="text" class="form-control" name="namaPengguna" th:value="*{namaPengguna}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td th:text="${user.emailPengguna}"></td>
+                    </tr>
+                    <tr>
+                        <td>NIDN</td>
+                        <td>
+                            <input type="text" class="form-control" name="dosen.nidn" th:value="*{dosen.nidn}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kartu NIDN</td>
+                        <td>
+                            <div th:unless="${user.dosen.urlNidn == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlNidn}" target="_blank">Lihat Kartu NIDN</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nomor Sertifikat Dosen</td>
+                        <td>
+                            <input type="number" step="1" class="form-control" name="dosen.noSerdos" th:value="*{dosen.noSerdos}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sertifikat Dosen</td>
+                        <td>
+                            <div th:unless="${user.dosen.urlSerdos == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlSerdos}" target="_blank">Lihat Sertifikat Dosen</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Perguruan Tinggi</td>
+                        <td>
+                            <input type="text" class="form-control" name="dosen.perguruanTinggi" th:value="*{dosen.perguruanTinggi}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fakultas</td>
+                        <td>
+                            <input type="text" class="form-control" name="dosen.fakultas" th:value="*{dosen.fakultas}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Program Studi</td>
+                        <td>
+                            <input type="text" class="form-control" name="dosen.prodi" th:value="*{dosen.prodi}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nomor Telepon</td>
+                        <td>
+                            <input type="text" class="form-control" name="noTelp" th:value="*{noTelp}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td>
+                            <input type="text" class="form-control" name="alamat" th:value="*{alamat}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jabatan Struktural</td>
+                        <td>
+                            <select th:name="jabstruk" class="form-select">
+                                <option th:if="*{dosen.jabstruk}" selected th:value="*{dosen.jabstruk.idJabatanStruktural}" th:text="*{dosen.jabstruk.namaJabatanStruktural}"></option>
+                                <option th:unless="*{dosen.jabstruk}" selected value="" disabled hidden>Pilih jabatan struktural</option>
+                                <option th:each="jabstruk: ${listJabstruk}"
+                                        th:value="${jabstruk.idJabatanStruktural}"
+                                        th:text="${jabstruk.namaJabatanStruktural}">
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>SK DT</td>
+                        <td>
+                            <div th:unless="${user.dosen.urlJastruk == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlJastruk}" target="_blank">Lihat SK DT</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jabatan Fungsional</td>
+                        <td>
+                            <input type="text" class="form-control" name="dosen.jabatanFungsional" th:value="*{dosen.jabatanFungsional}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>SK Jafung Terakhir</td>
+                        <td>
+                            <div th:unless="${user.dosen.urlJafung == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlJafung}" target="_blank">Lihat bukti SK Jabatan Fungsional</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+
+                <br>
+                <br>
+                
+                <h1 class="semi-bold-h1 text-color-primary pb-3">Riwayat Pendidikan</h1>
+                <table class="table-responsive sibkdTable">
+                <tbody>
+                    <tr>
+                    <td style="width: 35%;">Judul Skripsi</td>
+                    <td>
+                        <input type="text" class="form-control" name="dosen.skripsi" th:value="*{dosen.skripsi}">
+                    </td>
+                    </tr>
+                    <tr>
+                    <td>Ijazah S1</td>
+                    <td>
+                        <div th:unless="${user.dosen.urlijazah1 == null}" style="margin-right:10px">
+                            <a th:href="${user.dosen.urlijazah1}" target="_blank">Lihat Ijazah</a>
+                        </div>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>Perguruan Tinggi</td>
+                        <td>
+                            <input type="text" class="form-control" name="dosen.tesis" th:value="*{dosen.tesis}">
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>Judul Tesis</td>
+                    <td>
+                        <input type="text" class="form-control" name="dosen.ptS1" th:value="*{dosen.ptS1}">
+                    </td>
+                    </tr>
+                    <tr>
+                    <td>Ijazah S2</td>
+                    <td>
+                        <div th:unless="${user.dosen.urlijazah2 == null}" style="margin-right:10px">
+                            <a th:href="${user.dosen.urlijazah2}" target="_blank">Lihat Ijazah</a>
+                        </div>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td>Perguruan Tinggi</td>
+                    <td>
+                        <input type="text" class="form-control" name="dosen.ptS2" th:value="*{dosen.ptS2}">
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </form>
+        </div>
+      </div>
+    </div>
+          
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

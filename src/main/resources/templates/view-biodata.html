@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Biodata user</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+</head>
+<body>
+
+<script>
+    function validateSize(input) {
+        const fileSize = input.files[0].size / 1024; // in KB
+        if (fileSize > 500) {
+            event.target.value = '';
+            alert('Ukuran file melebihi 500 kb');
+        }
+    }
+    function validateSizeFoto(input) {
+        const fileSize = input.files[0].size  / 1024; // in KB
+        var form = document.getElementById('formFoto');
+        if (fileSize > 500) {
+            event.target.value = '';
+            alert('Ukuran file melebihi 500 kb');
+        } else {
+            input.form.submit()
+        }
+    }
+</script>
+
+<nav th:replace="fragments/fragment :: navbar(view-biodata)"></nav>
+<br>
+<br>
+<div class="container-fluid pb-5 container-first container-last">
+    <div class="container p-5">
+
+        <div class="row">
+            <div class="alert alert-success col-md-11" role="alert" th:if="${success}" th:text="${success}"></div>
+
+            <div class="col-md-3">
+                <div class="row" style="margin-right:15px;">
+                    <div class="">
+                        <img th:unless="${user.dosen.urlFoto == null}" class="float-end mb-3" th:src="${foto}" width="250" height="250" style="object-fit: cover;">
+                        <img th:if="${user.dosen.urlFoto == null}" class="float-end mb-3" src="https://dummyimage.com/sqrpop" width="250" height="250">
+                    </div>
+                    <br>
+                    <div>
+                        <form id="formFoto" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/foto/upload}" method="post" enctype="multipart/form-data">
+                            <label class="button-primary-outline float-end" style="display:inline;">
+                                Ubah Foto <input type="file" name="file"accept="image/jpeg,image/png" onchange="validateSizeFoto(this)" hidden>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Biodata -->
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h1 class="semi-bold-h1 text-color-primary">Biodata</h1>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <a class="button-secondary float-end" style="display: inline;" th:href="@{/biodata/edit}">Edit Biodata</a>
+                    </div>
+                </div>
+                <br>
+                <table class="table-responsive sibkdTable">
+                    <tbody>
+                    <tr>
+                        <td style="width: 35%;">Nama Lengkap</td>
+                        <td th:text="${user.namaPengguna}"></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td th:text="${user.emailPengguna}"></td>
+                    </tr>
+                    <tr>
+                        <td>NIDN</td>
+                        <td th:text="${dosen.nidn}"></td>
+                    </tr>
+                    <tr>
+                        <td>Kartu NIDN</td>
+                        <td>
+                            <div th:if="${user.dosen.urlNidn == null}">
+                                <form method="post" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/nidn/upload}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input onchange="validateSize(this)" type="file" name="file" class="form-control-file" accept="application/pdf,image/jpeg,image/png" required>
+                                    </div>
+                                    <button type="submit" class="button-primary mt-2" style="font-size: 12px; line-height: 15px; padding: 5px 8px;">Upload File</button>
+                                </form>
+                            </div>
+                            <div th:unless="${user.dosen.urlNidn == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlNidn}" target="_blank">Lihat Kartu NIDN</a>
+                                <!--                        <a onclick="alert('Anda yakin ingin menghapus dokumen ini?')" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/nidn/delete}"><i class="bi bi-trash float-end" style="color: #DC3545;"></i></a>-->
+
+                                <a data-toggle="modal" data-target="#modal-delete-nidn"><i class="bi bi-trash float-end" style="color: #DC3545;font-size: 16px;"></i></a>
+
+                                <div class="modal fade" id="modal-delete-nidn">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Apakah Anda yakin ingin menghapus file Kartu NIDN ini?</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                                <a type="button" class="button-danger mx-2" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/nidn/delete}">Hapus</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nomor Sertifikat Dosen</td>
+                        <td th:text="${dosen.noSerdos}"></td>
+                    </tr>
+                    <tr>
+                        <td>Sertifikat Dosen</td>
+                        <td>
+                            <div th:if="${user.dosen.urlSerdos == null}">
+                                <form method="post" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/serdos/upload}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="file" name="file" class="form-control-file" onchange="validateSize(this)" accept="application/pdf,image/jpeg,image/png" required>
+                                    </div>
+                                    <button type="submit" class="button-primary mt-2" style="font-size: 12px; line-height: 15px; padding: 5px 8px;">Upload File</button>
+                                </form>
+                            </div>
+                            <div th:unless="${user.dosen.urlSerdos == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlSerdos}" target="_blank">Lihat Sertifikat Dosen</a>
+
+                                <a data-toggle="modal" data-target="#modal-delete-serdos"><i class="bi bi-trash float-end" style="color: #DC3545;font-size: 16px;"></i></a>
+
+                                <div class="modal fade" id="modal-delete-serdos">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Apakah Anda yakin ingin menghapus file Sertifikat Dosen ini?</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                                <a type="button" class="button-danger mx-2" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/serdos/delete}">Hapus</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Perguruan Tinggi</td>
+                        <td th:text="${dosen.perguruanTinggi}"></td>
+                    </tr>
+                    <tr>
+                        <td>Fakultas</td>
+                        <td th:text="${dosen.fakultas}"></td>
+                    </tr>
+                    <tr>
+                        <td>Program Studi</td>
+                        <td th:text="${dosen.prodi}"></td>
+                    </tr>
+                    <tr>
+                        <td>Nomor Telepon</td>
+                        <td th:text="${user.noTelp}"></td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td th:text="${user.alamat}"></td>
+                    </tr>
+                    <tr>
+                        <td>Jabatan Struktural (DT)</td>
+                        <td th:if="${dosen.jabstruk}" th:text="${dosen.jabstruk.namaJabatanStruktural}"></td>
+                        <td th:unless="${dosen.jabstruk}"></td>
+                    </tr>
+                    <tr>
+                        <td>SK DT</td>
+                        <td>
+                            <div th:if="${user.dosen.urlJastruk == null}">
+                                <form method="post" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/jastruk/upload}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="file" name="file" class="form-control-file"  onchange="validateSize(this)" accept="application/pdf,image/jpeg,image/png" required>
+                                    </div>
+                                    <button type="submit" class="button-primary mt-2" style="font-size: 12px; line-height: 15px; padding: 5px 8px;">Upload File</button>
+                                </form>
+                            </div>
+                            <div th:unless="${user.dosen.urlJastruk == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlJastruk}" target="_blank">Lihat bukti SK DT</a>
+                                <a data-toggle="modal" data-target="#modal-delete-jastruk"><i class="bi bi-trash float-end" style="color: #DC3545;font-size: 16px;"></i></a>
+
+                                <div class="modal fade" id="modal-delete-jastruk">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Apakah Anda yakin ingin menghapus file SK Jabatan Struktural ini?</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                                <a type="button" class="button-danger mx-2" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/jastruk/delete}">Hapus</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jabatan Fungsional</td>
+                        <td th:text="${dosen.jabatanFungsional}"></td>
+                    </tr>
+                    <tr>
+                        <td>SK Jafung Terakhir</td>
+                        <td>
+                            <div th:if="${user.dosen.urlJafung == null}">
+                                <form method="post" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/jafung/upload}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="file" name="file" class="form-control-file" onchange="validateSize(this)" accept="application/pdf,image/jpeg,image/png" required>
+                                    </div>
+                                    <button type="submit" class="button-primary mt-2" style="font-size: 12px; line-height: 15px; padding: 5px 8px;">Upload File</button>
+                                </form>
+                            </div>
+                            <div th:unless="${user.dosen.urlJafung == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlJafung}" target="_blank">Lihat bukti SK Jabatan Fungsional</a>
+                                <a data-toggle="modal" data-target="#modal-delete-jafung"><i class="bi bi-trash float-end" style="color: #DC3545;font-size: 16px;"></i></a>
+
+                                <div class="modal fade" id="modal-delete-jafung">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Apakah Anda yakin ingin menghapus file SK Jabatan Fungsional ini?</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                                <a type="button" class="button-danger mx-2" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/jafung/delete}">Hapus</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <br>
+
+                <h1 class="semi-bold-h1 text-color-primary pb-3">Riwayat Pendidikan</h1>
+                <table class="table-responsive sibkdTable">
+                    <tbody>
+                    <tr>
+                        <td style="width: 35%;">Judul Skripsi</td>
+                        <td th:text="${dosen.skripsi}"></td>
+                    </tr>
+                    <tr>
+                        <td>Ijazah S1</td>
+                        <td>
+                            <div th:if="${user.dosen.urlijazah1 == null}">
+                                <form method="post" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/ijazah1/upload}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="file" name="file" class="form-control-file" onchange="validateSize(this)" accept="application/pdf,image/jpeg,image/png" required>
+                                    </div>
+                                    <button type="submit" class="button-primary mt-2" style="font-size: 12px; line-height: 15px; padding: 5px 8px;">Upload File</button>
+                                </form>
+                            </div>
+                            <div th:unless="${user.dosen.urlijazah1 == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlijazah1}" target="_blank">Lihat Ijazah S1</a>
+                                <a data-toggle="modal" data-target="#modal-delete-ijazah1"><i class="bi bi-trash float-end" style="color: #DC3545;font-size: 16px;"></i></a>
+
+                                <div class="modal fade" id="modal-delete-ijazah1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Apakah Anda yakin ingin menghapus file Ijazah S1 ini?</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                                <a type="button" class="button-danger mx-2" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/ijazah1/delete}">Hapus</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Perguruan Tinggi</td>
+                        <td th:text="${dosen.tesis}"></td>
+                    </tr>
+                    <tr>
+                        <td>Judul Tesis</td>
+                        <td th:text="${dosen.ptS1}"></td>
+                    </tr>
+                    <tr>
+                        <td>Ijazah S2</td>
+                        <td>
+                            <div th:if="${user.dosen.urlijazah2 == null}">
+                                <form method="post" th:action="@{/biodata/} + ${user.dosen.idDosen} + @{/ijazah2/upload}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="file" name="file" class="form-control-file" onchange="validateSize(this)" accept="application/pdf,image/jpeg,image/png" required>
+                                    </div>
+                                    <button type="submit" class="button-primary mt-2" style="font-size: 12px; line-height: 15px; padding: 5px 8px;">Upload File</button>
+                                </form>
+                            </div>
+                            <div th:unless="${user.dosen.urlijazah2 == null}" style="margin-right:10px">
+                                <a th:href="${user.dosen.urlijazah2}" target="_blank">Lihat Ijazah S2</a>
+                                <a data-toggle="modal" data-target="#modal-delete-ijazah2"><i class="bi bi-trash float-end" style="color: #DC3545;font-size: 16px;"></i></a>
+
+                                <div class="modal fade" id="modal-delete-ijazah2">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Apakah Anda yakin ingin menghapus file Ijazah S2 ini?</h5>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                                <a type="button" class="button-danger mx-2" th:href="@{/biodata/} + ${user.dosen.idDosen} + @{/ijazah2/delete}">Hapus</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Perguruan Tinggi</td>
+                        <td th:text="${dosen.ptS2}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

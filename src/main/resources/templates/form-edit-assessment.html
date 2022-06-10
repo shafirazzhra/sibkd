@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Catatan dan Rekomendasi</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(${assessment})"></nav>
+<div class="container-sm p-5 container-first container-last">
+    <div class="row">
+        <br>
+        <h2 class="semi-bold-h2 text-center" style="margin-bottom: 30px">Form Pemberian Catatan dan Rekomendasi</h2>
+        <br>
+
+        <form th:action="@{/assessment/__${emailDosen}__/edit}" th:object="${item}" method="POST">
+            <input type="hidden" th:field="*{idItem}"/>
+            <input type="hidden" th:field="*{dosen}"/>
+            <input type="hidden" th:field="*{kegiatanBKD}"/>
+            <input type="hidden" th:field="*{semester}"/>
+            <input type="hidden" th:field="*{bidang}"/>
+            <input type="hidden" th:field="*{deskripsi}"/>
+            <input type="hidden" th:field="*{namaBuktiPenugasan}"/>
+            <input type="hidden" th:field="*{sks}"/>
+            <input type="hidden" th:field="*{masaPenugasan}"/>
+            <input type="hidden" th:field="*{namaBukti}"/>
+            <input type="hidden" th:field="*{sksTerpenuhi}"/>
+            <input type="hidden" th:field="*{listFileBuktiPenugasan}">
+            <input type="hidden" th:field="*{listFileBukti}">
+
+            <div class="tableFixHead">
+                <table class="table-responsive sibkdTable custom-item ">
+                    <thead>
+                    <tr>
+                        <th class="tg-0pky" rowspan="2">Jenis Kegiatan</th>
+                        <th class="tg-0pky" rowspan="2">Bidang</th>
+                        <th class="tg-0pky" colspan="2">Beban Kerja</th>
+                        <th class="tg-0pky" rowspan="2">Masa Penugasan</th>
+                        <th class="tg-0pky" colspan="2">Beban Kinerja</th>
+                    </tr>
+                    <tr>
+                        <th class="tg-0pky">Bukti Penugasan</th>
+                        <th class="tg-0pky">SKS</th>
+                        <th class="tg-0pky">Bukti Kinerja</th>
+                        <th class="tg-0pky">SKS Capaian</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tg-0pky" th:text="*{deskripsi}"></td>
+                            <td class="tg-0pky" th:text="*{bidang.namaBidang}"></td>
+                            <td class="tg-0pky">
+                                <p class="mb-0" th:text="*{namaBuktiPenugasan}"></p>
+                                <p th:if="${item.listFileBuktiPenugasan.size()} > 0" class="text-color-primary mb-0"><i>Dokumen Penugasan :</i></p>
+                                <div th:each="dokumen : ${item.listFileBuktiPenugasan}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+                                    <a class="text-color-primary link-primary" th:text="'&ensp;&bull;&ensp;'+ ${dokumen.name}" th:href="${dokumen.urlView}" th:target="_blank"></a>
+                                </div>
+                            </td>
+                            <td class="tg-0pky" th:text="*{sks}"></td>
+                            <td class="tg-0pky" th:text="*{masaPenugasan} + ' Semester'"></td>
+                            <td class="tg-0pky">
+                                <p class="mb-0" th:text="*{namaBukti}"></p>
+                                <p th:if="${item.listFileBukti.size()} > 0" class="text-color-primary mb-0"><i>Dokumen Kinerja :</i></p>
+                                <div th:each="dokumen : ${item.listFileBukti}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+                                    <a class="text-color-primary link-primary" th:text="'&ensp;&bull;&ensp;'+ ${dokumen.name}" th:href="${dokumen.urlView}" th:target="_blank"></a>
+                                </div>
+                            </td>
+                            <td class="tg-0pky" th:text="*{sksTerpenuhi}"></td>
+                        </tr>
+                        <tr th:if="${roleAssess.equals('asesor1')}">
+                            <input type="hidden" th:field="*{catatanAsesor2}">
+                            <input type="hidden" th:field="*{rekomendasiAsesor2}">
+                            <input type="hidden" th:field="*{komentarKaprodi}">
+                            <td class="tg-0pky" colspan="4">
+                                <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Anda (Asesor 1) :</h6>
+                                <textarea class="form-control" type="text" name="catatanAsesor1" th:text="*{catatanAsesor1}"></textarea>
+                            </td>
+                            <td class="tg-0pky" colspan="3">
+                                <h6 class="semi-bold-h6 text-color-primary-dark">Rekomendasi Anda (Asesor 1) :</h6>
+                                <div class="input-group-btn search-panel">
+                                    <select class="btn dropdown-toggle text-center" name="rekomendasiAsesor1" data-toggle="dropdown" style="border: 1px solid lightgray;">
+                                        <option selected th:if="*{rekomendasiAsesor1} == null or *{rekomendasiAsesor1} == ''" value="Belum Ada">Belum Ada</option>
+                                        <option selected th:unless="*{rekomendasiAsesor1} == null or *{rekomendasiAsesor1} == ''" th:text="*{rekomendasiAsesor1}"></option>
+                                        <option th:each= "rekomendasi: ${listRekomendasi}"
+                                                th:if="*{rekomendasiAsesor1} != ${rekomendasi}"
+                                                th:value="${rekomendasi}"
+                                                th:text="${rekomendasi}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${roleAssess.equals('asesor2')}">
+                            <input type="hidden" th:field="*{catatanAsesor1}">
+                            <input type="hidden" th:field="*{rekomendasiAsesor1}">
+                            <input type="hidden" th:field="*{komentarKaprodi}">
+                            <td class="tg-0pky" colspan="4">
+                                <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Anda (Asesor 2) :</h6>
+                                <textarea class="form-control" type="text" name="catatanAsesor2" th:text="*{catatanAsesor2}"></textarea>
+                            </td>
+                            <td class="tg-0pky" colspan="3">
+                                <h6 class="semi-bold-h6 text-color-primary-dark">Rekomendasi Anda (Asesor 2) :</h6>
+                                <div class="input-group-btn search-panel">
+                                    <select class="btn dropdown-toggle text-center" name="rekomendasiAsesor2" data-toggle="dropdown" style="border: 1px solid lightgray;">
+                                        <option selected th:if="*{rekomendasiAsesor2} == null or *{rekomendasiAsesor2} == ''" value="Belum Ada">Belum Ada</option>
+                                        <option selected th:unless="*{rekomendasiAsesor2} == null or *{rekomendasiAsesor2} == ''" th:value="*{rekomendasiAsesor2}" th:text="*{rekomendasiAsesor2}"></option>
+                                        <option th:each= "rekomendasi: ${listRekomendasi}"
+                                                th:if="*{rekomendasiAsesor2} != ${rekomendasi}"
+                                                th:value="${rekomendasi}"
+                                                th:text="${rekomendasi}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${roleAssess.equals('kaprodi')}">
+                            <input type="hidden" th:field="*{catatanAsesor1}">
+                            <input type="hidden" th:field="*{rekomendasiAsesor1}">
+                            <input type="hidden" th:field="*{catatanAsesor2}">
+                            <input type="hidden" th:field="*{rekomendasiAsesor2}">
+                            <td class="tg-0pky" colspan="7">
+                                <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Anda (Kaprodi) :</h6>
+                                <textarea class="form-control" type="text" name="komentarKaprodi" th:text="*{komentarKaprodi}"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <div class="d-grid d-md-flex justify-content-md-end">
+                <a class="button-danger-outline me-md-2" th:href="@{/assessment/detail/__${emailDosen}__}">Batal</a>
+                <button type="submit" class="button-success">Simpan</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

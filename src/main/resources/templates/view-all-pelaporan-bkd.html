@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Pelaporan BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(pelaporan-bkd)"></nav>
+<div class="container-sm p-5 container-first container-last" >
+    <div class="row-sm">
+        <div class="alert alert-success col-md-12" role="alert" th:if="${success}" th:text="${success}"></div>
+
+        <div class="alert alert-danger col-md-12" role="alert" th:if="${error}" th:text="${error}"></div>
+        <br>
+        <h2><b>Daftar Pelaporan BKD</b></h2>
+        <br><br>
+
+        <form th:action="@{/pelaporan-bkd/view-all}">
+            <div class="input-group" >
+              <div class="input-group-btn search-panel">
+                  <select class="btn dropdown-toggle" name="status" style="border: 1px solid lightgray; width: 175px; height: 38px;" data-toggle="dropdown">
+                      <option th:if="${status}== null" value="All">All</option>
+                      <option th:if="${status}!= null" th:value="${status}" th:text="${status}"></option>
+                      <option th:if="${status}!= 'All' and ${status}!= null" value="All">All</option>
+                      <option th:each= "st: ${listStatus}"
+                      th:if="${status}!= ${st}"
+                      th:value="${st}"
+                      th:text="${st}">
+                      </option>
+                  </select>
+              </div>
+              <div style="margin:8px"> </div>
+    
+              <input type= "text" class="form-control" style="border-radius:4px; height: 38px;" name="keyword" th:value="${keyword}" placeholder="Cari dosen berdasarkan nama">
+              <div style="margin:8px"> </div>
+              <span class="input-group-btn">
+                  <button class="button-primary" type="submit"  style="height: 38px;">Cari</button>
+              </span>
+          </div>
+          </form>
+        <br>
+        
+        <div>
+            <div class="d-flex">
+                <h5 style="display: inline;"  th:text="'Jadwal saat ini: ' + ${currentJadwal}"></h5>
+                <a th:if="(${bisaremind}) and (${role == 'Staff SDM'})" type="button" class="button-remind button-atas-kanan" style="display: inline;" th:href="@{'/reminder/all'}">Remind All</a>
+            </div>
+            <br>
+           
+        </div>
+        <div th:if= "${dosenList.size() != 0}" class="tableFixHead">
+            <table id="example" class="table-responsive sibkdTable">
+                <thead>
+                <tr class="text-center">
+                    <th scope="col" width="5%">No.</th>
+                    <th th:if="${role == 'Staff SDM'}" scope="col" width="20%">Nama Lengkap Dosen</th>
+                    <th th:unless="${role == 'Staff SDM'}" scope="col" width="25%">Nama Lengkap Dosen</th>
+                    <th th:if="${role == 'Staff SDM'}" scope="col" width="30%" colspan="2">Asesor</th>
+                    <th th:unless="${role == 'Staff SDM'}" scope="col" width="25%">Asesor</th>
+                    <th scope="col" width="15%">Status</th>
+                    <th th:if="${role == 'Staff SDM'}" scope="col" width="35%" colspan="3">Action</th>
+                    <th th:unless="${role == 'Staff SDM'}" scope="col" width="20%">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dosen, iterationStatus : ${dosenList}">
+                    <td style="text-align: center;" width="5%" th:text="${iterationStatus.count}"></td>
+                    <td th:text="${dosen.namaDosen}"></td>
+                    <td th:if="${dosen.listAsesor.size() == 0}" class="body-text text-color-secondary text-center">(Asesor belum ada)</td>
+                    <td th:if="${dosen.listAsesor.size() != 0}" style="vertical-align: center">
+                        <ol th:if="${dosen.listAsesor.size() == 1}">
+                            <li th:text="${dosen.listAsesor.get(0).namaAsesor}"></li>
+                            <li>-</li>
+                        </ol>
+                        <ol th:if="${dosen.listAsesor.size() == 2}">
+                            <li th:text="${dosen.listAsesor.get(0).namaAsesor}"></li>
+                            <li th:text="${dosen.listAsesor.get(1).namaAsesor}"></li>
+                        </ol>
+                    </td>
+
+
+                    <!-- Edit -->
+                    <div th:if="${role == 'Staff SDM'}">
+                        <td align="center" th:unless="(${dosen.status == 'Belum Ada Asesor'}) or (${dosen.status == 'Belum Ada Item'})">
+                            <!-- Edit Disabled -->
+                            <button disabled class="button-secondary" style="float:none!important;display:inline;"><a disabled type="button" style="display: inline;color: white; text-align: center;" th:href="@{'/pelaporan-bkd/edit-asesor/' + ${dosen.emailDosen}}">Edit</a></button>
+                        </td>
+                        <td class="text-center" th:if="(${dosen.status == 'Belum Ada Asesor'}) or (${dosen.status == 'Belum Ada Item'})">
+                            <a type="button" class="button-secondary" style="display: inline;" th:href="@{'/pelaporan-bkd/edit-asesor/' + ${dosen.emailDosen}}">Edit</a>
+                        </td>
+                    </div>
+
+
+                    <!-- Status  -->
+                    <td class="text-center" style="text-align: center;">
+                        <span th:if="${dosen.status == 'Belum Ada Asesor'}" class="badge rounded-pill bg-warning" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Belum Ada Asesor</span>
+                        <span th:if="${dosen.status == 'Belum Ada Item'}" class="badge rounded-pill bg-secondary" style="font-weight: 600;height: 1.438rem;font-size: 14px;" th:text="${dosen.status}"></span>
+                        <span th:if="${dosen.status == 'Belum Selesai'}" class="badge rounded-pill bg-dangerr" style="font-weight: 600;height: 1.438rem;font-size: 14px;" th:text="${dosen.status}"></span>
+                        <span th:if="${dosen.status == 'Selesai Asesor 1'}" class="badge rounded-pill bg-sekunder" style="font-weight: 600;height: 1.438rem;font-size: 14px;" th:text="${dosen.status}"></span>
+                        <span th:if="${dosen.status == 'Selesai Asesor 2'}" class="badge rounded-pill bg-sekunder" style="font-weight: 600;height: 1.438rem;font-size: 14px;" th:text="${dosen.status}"></span>
+                        <span th:if="${dosen.status == 'Sudah Selesai'}" class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;" th:text="${dosen.status}"></span>
+                    </td>
+
+                    <!-- Action -->
+                    <td class="text-center">
+                        <a type="button" class="button-primary" style="display: inline;" th:href="@{/pelaporan-bkd/detail/__${dosen.emailDosen}__}">Detail</a>
+                    </td>
+
+                    <div th:if="${role == 'Staff SDM'}">
+                        <td class="text-center" th:unless = "(${dosen.status} == 'Sudah Selesai') or (${dosen.status} == null) or (${dosen.status} == 'Belum Ada Asesor') or (${bisaremind}== false) or (${dosen.status} == 'Selesai Asesor 1' and ${bisaremindasesor}== false) or (${dosen.status} == 'Selesai Asesor 2' and ${bisaremindasesor}==false) or ((${dosen.status} == 'Belum Ada Item') and (${bisareminddosen}==false))">
+                            <a type="button" class="button-remind" style="display: inline;" th:href="@{/reminder/} + ${dosen.emailDosen}">Remind</a>
+                        </td>
+
+                        <td align="center" th:if = "(${dosen.status} == 'Sudah Selesai') or (${dosen.status} == null) or (${dosen.status} == 'Belum Ada Asesor') or (${bisaremind}== false) or ((${dosen.status} == 'Selesai Asesor 1') and (${bisaremindasesor}==false)) or ((${dosen.status} == 'Selesai Asesor 2') and (${bisaremindasesor}==false)) or ((${dosen.status} == 'Belum Ada Item') and (${bisareminddosen}==false))">
+                            <button disabled class="button-remind" style="float:none!important;display:inline;"><a disabled type="button" style="display: inline; color: white;">Remind</a></button>
+                        </td>
+                    
+                    </div>
+
+                    <div th:if="${role == 'Staff SDM'}">
+                        <td class="text-center"  th:unless = "${dosen.status} == 'Sudah Selesai' and ${dosen.getJabstruk() != null}">
+                            <!-- Export Disabled -->
+                            <button disabled class="button-success"><a disabled type="button" style="display: inline;color: white;" th:href="@{'/export-laporan/' + ${dosen.idDosen}}">Export</a></button>
+                        </td>
+                        <td class="text-center" th:if = "${dosen.status} == 'Sudah Selesai' and ${dosen.getJabstruk() != null}">
+                            <!-- Export Bisa -->
+                            <a type="button" class="button-success" style="display: inline;" th:href="@{'/export-laporan/' + ${dosen.idDosen}}">Export</a>
+                        </td>
+                    </div>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:unless = "${dosenList.size()!=0}">
+            <br>
+            <div class="alert alert-warning text-center" role="alert">
+                <h5>Tidak ada dosen yang ditemukan.</h5>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

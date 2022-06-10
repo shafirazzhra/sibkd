@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Kegiatan BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(${#strings.toLowerCase(namaBidang)})"></nav>
+
+<div class="container-fluid container-first container-last">
+    <div class="container-sm p-5">
+        <div class="row-sm">
+            <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+            <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+
+            <div class="position-relative d-flex my-4">
+                <h3 class="bold-h3 text-color-title" th:text="'Daftar Kegiatan Bidang ' + ${namaBidang}"></h3>
+                <a class="button-primary-outline button-atas-kanan" th:href="@{/kegiatan-bkd/{idBidang}/add(idBidang=${idBidang})}">+Tambah Kegiatan</a>
+            </div>
+            <table class="table-responsive sibkdTable">
+                <thead>
+                <tr>
+                    <th>No.</th>
+                    <th style="width: 40%">Kegiatan</th>
+                    <th style="width: 60%">Template Deskripsi</th>
+                    <th colspan="2">Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="kegiatan, iterationStatus : ${listKegiatan}">
+                    <th style="text-align: center;" th:text="${iterationStatus.count}"></th>
+                    <td th:text="${kegiatan.namaKegiatan}"></td>
+                    <td th:text="${kegiatan.template}"></td>
+                    <div th:if="${kegiatan.listItem.size() == 0}">
+                        <td class="text-center">
+                            <a type="button" class="button-secondary" style="display: inline-block;" th:href="@{'/kegiatan-bkd/' + ${idBidang} + '/edit/' + ${kegiatan.idKegiatan}}">Edit</a>
+                        </td>
+                        <td>
+                            <a type="button" class="button-danger" style="display: inline-block;" data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${kegiatan.idKegiatan}">Hapus</a>
+
+                            <div class="modal fade" th:id="modal-delete+${kegiatan.idKegiatan}" >
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus Kegiatan</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5 th:text="'Apakah Anda yakin ingin menghapus kegiatan ' + ${kegiatan.namaKegiatan} + '?'"></h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                            <a type="button" class="button-danger mx-2" th:href="@{'/kegiatan-bkd/' + ${idBidang} + '/delete/' + ${kegiatan.idKegiatan}}">Hapus</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </div>
+                    <div th:unless="${kegiatan.listItem.size() == 0}" class="text-center">
+                        <td colspan="2" class="text-center">
+                            <a type="button" class="button-secondary" style="display: inline-block;" th:href="@{'/kegiatan-bkd/' + ${idBidang} + '/edit/' + ${kegiatan.idKegiatan}}">Edit</a>
+                        </td>
+                    </div>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

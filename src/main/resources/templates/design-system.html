@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Design System SI-BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+    <!-- Button -->
+    <button class="button-primary">Test</button>
+    <button disabled class="button-primary">Test</button>
+    <button class="button-primary-outline">Test</button>
+    <button class="button-secondary">Test</button>
+    <button disabled class="button-secondary">Test</button>
+    <button class="button-secondary-outline">Test</button>
+    <button class="button-success">Test</button>
+    <button disabled class="button-success">Test</button>
+    <button class="button-success-outline">Test</button>
+    <button class="button-danger">Test</button>
+    <button disabled class="button-danger">Test</button>
+    <button class="button-danger-outline">Test</button>
+
+    <!-- Typography: cantumin kelas warnanya juga.
+     Ini cuma contoh aja jadi sesuain warnanya sama di figma. -->
+    <p>Ini cuma contoh aja jadi sesuain warnanya sama di figma</p>
+    <h1 class="semi-bold-h1 text-color-primary">semi-bold-h1</h1>
+    <h2 class="semi-bold-h2 text-color-secondary">semi-bold-h2</h2>
+    <h3 class="semi-bold-h3 text-color-success">semi-bold-h3</h3>
+    <h4 class="semi-bold-h4 text-color-danger">semi-bold-h4</h4>
+    <h5 class="semi-bold-h5 text-color-title">semi-bold-h5</h5>
+    <h6 class="semi-bold-h6 text-color-base">semi-bold-h6</h6>
+
+    <h1 class="bold-h1 text-color-primary">bold-h1</h1>
+    <h2 class="bold-h2 text-color-secondary">bold-h2</h2>
+    <h3 class="bold-h3 text-color-success">bold-h3</h3>
+    <h4 class="bold-h4 text-color-danger">bold-h4</h4>
+    <h5 class="bold-h5 text-color-title">bold-h5</h5>
+    <h6 class="bold-h6 text-color-base">bold-h6</h6>
+
+    <h1 class="extrabold-h1 text-color-primary">extrabold-h1</h1>
+    <h2 class="extrabold-h2 text-color-secondary">extrabold-h2</h2>
+    <h3 class="extrabold-h3 text-color-success">extrabold-h3</h3>
+    <h4 class="extrabold-h4 text-color-danger">extrabold-h4</h4>
+    <h5 class="extrabold-h5 text-color-title">extrabold-h5</h5>
+    <h6 class="extrabold-h6 text-color-base">extrabold-h6</h6>
+
+    <h1 class="display-h1 text-color-primary">display-h1</h1>
+    <h2 class="display-h2 text-color-secondary">display-h2</h2>
+    <h3 class="display-h3 text-color-success">display-h3</h3>
+    <h4 class="display-h4 text-color-danger">display-h4</h4>
+
+    <p class="lead-text"> Ini bisa bagian sub-title nya gitu sebelum masuk ke deskripsi</p>
+    <p class="body-text">Ini bisa bagian deskripsi</p>
+
+    <!-- Rounded badge -->
+    <span class="badge rounded-pill bg-primer">Primary</span>
+    <span class="badge rounded-pill bg-sekunder">Secondary</span>
+    <span class="badge rounded-pill bg-sukses">Success</span>
+    <span class="badge rounded-pill bg-dangerr">Danger</span>
+
+    <br><br><br><br>
+
+    <!-- Table -->
+    <div class="container-fluid">
+        <div class="container">
+            <table class="table-responsive sibkdTable">
+                <thead>
+                <tr>
+                    <th>head1</th>
+                    <th>head2</th>
+                    <th>head3</th>
+                    <th>head4</th>
+                </tr>
+                </thead>
+
+                <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <div class="links"><a href="#">&laquo;</a> <a class="active" href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">&raquo;</a></div>
+                    </td>
+                </tr>
+                </tfoot>
+
+                <tbody>
+                <tr>
+                    <td>cell1_1</td>
+                    <td>cell2_1</td>
+                    <td>cell3_1</td>
+                    <td>cell4_1</td>
+                </tr>
+                <tr>
+                    <td>cell1_2</td>
+                    <td>cell2_2</td>
+                    <td>cell3_2</td>
+                    <td>cell4_2</td>
+                </tr>
+                <tr>
+                    <td>cell1_3</td>
+                    <td>cell2_3</td>
+                    <td>cell3_3</td>
+                    <td>cell4_3</td>
+                </tr>
+                <tr>
+                    <td>cell1_4</td>
+                    <td>cell2_4</td>
+                    <td>cell3_4</td>
+                    <td>cell4_4</td>
+                </tr>
+                <tr>
+                    <td>cell1_5</td>
+                    <td>cell2_5</td>
+                    <td>cell3_5</td>
+                    <td>cell4_5</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

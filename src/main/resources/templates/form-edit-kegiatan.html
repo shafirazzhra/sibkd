@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Edit Kegiatan BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(${#strings.toLowerCase(namaBidang)})"></nav>
+
+<div class="container-lg p-5 container-first container-last" >
+    <div class="row justify-content-center">
+        <div class="alert alert-danger w-75" role="alert" th:if="${error}" th:text="${error}"></div>
+        <div class="card w-75">
+
+            <form th:action="@{/kegiatan-bkd/{idBidang}/edit(idBidang=${idBidang})}" th:object="${kegiatan}" method="POST">
+
+                <div class="card-header bg-transparent p-3">
+                    <h2 class="card-title text-center">Form Edit Kegiatan BKD</h2>
+                    <h2 class="card-title text-center" th:text="'Bidang ' + ${namaBidang}"></h2>
+                </div>
+                <div class="card-body">
+
+                    <input type="hidden" th:field="*{idKegiatan}" />
+
+                    <input type="hidden" th:field="*{bidang}" />
+
+                    <div class="card-text my-3 row">
+                        <label class="col-sm-4 col-form-label">Nama Kegiatan</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" name="namaKegiatan" th:value="*{namaKegiatan}" required/>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">Template Deskripsi</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" type="text" name="template" th:text="*{template}"required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent p-3">
+                    <div class="d-grid d-md-flex justify-content-md-end">
+                        <a class="button-danger-outline me-md-2" th:href="@{/kegiatan-bkd/} + ${idBidang}">Batal</a>
+                        <button type="submit" class="button-success">Simpan</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

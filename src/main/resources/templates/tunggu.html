@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(beranda)"></nav>
+<div class="container container-first container-last">
+    <div class="row">
+        <div class="col-lg-12">
+            <br><br><br>
+            <img th:src="@{/image/asset 3.png}" style="width: 348px; height: 341px;" class="img-responsive center-block d-block mx-auto">
+             <div class="col-sm-12" style="text-align: center;">
+            <br>
+                <h3 class="semi-bold-h4" style="color: #152536; display: inline;">Anda belum memiliki role pada SI-BKD</h3>
+               <br>
+                <h5 class="semi-bold-h5" style="color: #194189; display:inline; margin: auto;">Harap tunggu admin memberikan role untuk dapat mengakses sistem.</h5>
+             </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+
+</html>

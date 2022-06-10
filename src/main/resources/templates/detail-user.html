@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Pengguna</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(user)"></nav>
+
+<div class="container-sm p-5 container-first container-last" >
+    <div class="row justify-content-center">
+        <div class="alert alert-success w-75" role="alert" th:if="${success}" th:text="${success}"></div>
+        <div class="card w-75">
+            <div class="card-body m-5">
+                <h2 class="card-title text-center">Detail Pengguna</h2>
+                <br class="card-text">
+                <table class="card-table table table-borderless">
+                    <tbody>
+                    <tr>
+                        <td style="width:20%">Nama Lengkap</td>
+                        <td style="width:2%">:</td>
+                        <td th:text="${user.namaPengguna}"></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>:</td>
+                        <td th:text="${user.emailPengguna}"></td>
+                    </tr>
+                    <tr>
+                        <td>Telepon</td>
+                        <td>:</td>
+                        <td th:text="${user.noTelp}"></td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td>:</td>
+                        <td th:text="${user.alamat}"></td>
+                    </tr>
+                    <tr>
+                        <td>Role</td>
+                        <td>:</td>
+                        <td th:text="${user.role.namaRole}"></td>
+                    </tr>
+                    <tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-transparent p-3">
+                <div class="row mb-2 mt-2">
+                    <!-- panel-footer -->
+                    <div class="col-6 text-left">
+                        <a class="button-primary-outline" style="display: inline;" href="/user">Kembali</a>
+                    </div>
+                    <div class="col-6 text-right">
+                        <div class="d-grid d-md-flex justify-content-md-end">
+                            <!--                        <a th:unless="${user.role.idRole == 3}"  class="btn button-danger-outline me-md-2" style="display: inline;" -->
+                            <!--                        th:href="@{/user/revoke/} + ${user.emailPengguna}"-->
+                            <!--                        th:role-confirm-delete="|Apakah anda yakin ingin menghapus akses ${user.role.namaRole} user ini?|"-->
+                            <!--                        onclick="if (!confirm(this.getAttribute('role-confirm-delete'))) return false">Hapus Akses</a>-->
+
+                            <a th:unless="${user.role.idRole == 3}" class="button-danger-outline me-md-2" data-toggle="modal" data-target="#modal-revoke-access">Hapus Akses</a>
+
+                            <div class="modal fade" id="modal-revoke-access">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus Akses Pengguna</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5 th:text="'Apakah Anda yakin ingin menghapus akses ' + ${user.namaPengguna} + '?'"></h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                            <a type="button" class="button-danger-outline mx-2" th:href="@{/user/revoke/} + ${user.emailPengguna}">Hapus Akses</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a th:unless="${user.role.idRole == 3}" class="button-secondary" th:href="@{/user/edit/} + ${user.emailPengguna}">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

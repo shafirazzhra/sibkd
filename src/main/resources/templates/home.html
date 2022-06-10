@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body onload="startTime()">
+<nav th:replace="fragments/fragment :: navbar(beranda)"></nav>
+
+<div class="container-fluid pb-5" style="margin-bottom: 15.36vh;">
+    <div class="container container-first-home">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-md-8">
+                <h3 th:text="'Selamat datang, ' + ${nama}" class="bold-h3 text-color-title"></h3>
+                <p th:text="'Email: ' + ${email} + ' - Role: ' + ${role}" class="body-text text-color-base"></p>
+            </div>
+
+            <div class="col-md-4 float-end" style="text-align: right;">
+                <h4 th:text="'Semester ' + ${currentSemester.namaSemester}" class="bold-h4 text-color-title float-end"></h4>
+                <div class="float-end">
+                    <p th:text="${#dates.format(#dates.createNow(), 'EEEE, dd MMM yyyy')} + '&nbsp;'" class="body-text float-start"></p>
+                    <span id="time" class="body-text float-start"></span>
+                </div>
+                <!--                <a sec:authorize="hasAuthority('Admin')" class="semi-bold-h6 text-color-primary link-primary float-end" th:href="@{/semester/view-all}">Lihat Semua Semester</a>-->
+            </div>
+
+            <!-- DROPDOWN -->
+<!--            <div class="col-md-4">-->
+<!--                <div class="input-group input-group-lg text-end float-end">-->
+<!--                    <select class="custom-select semester-dropdown" id="inputGroupSelect04" style="margin-left: auto;">-->
+<!--                        <option th:text="${currentSemester.namaSemester}"></option>-->
+<!--                        <option th:each="semester : ${listSemester}" th:value="${semester.idSemester}" th:field="*{currentSemester}" th:text="${semester.namaSemester}"></option>-->
+<!--                    </select>-->
+<!--                    <div class="input-group-btn">-->
+<!--                        <button class="button-primary" type="button">Lihat</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+
+        <div class="row" id="row-jadwal">
+            <div class="col-sm-7">
+                <div class="card card-custom">
+                    <div class="card-header card-header-custom">
+                        <div class="heading-with-icon d-flex">
+                            <img width="24px" alt="Jadwal Icon" th:src="@{/image/calendar-week-fill.svg}"/>
+                            <h4 class="semi-bold-h4 text-color-title head-dashboard" style="margin-top: auto;margin-bottom: auto;">Jadwal BKD</h4></span>
+                            <a sec:authorize="hasAuthority('Admin')" class="button-secondary button-atas-kanan" th:href="@{/jadwal-bkd/edit/} + ${currentSemester.idSemester}">Edit</a>
+
+                        </div>
+                    </div>
+                    <div class="card-body card-body-custom">
+
+                            <h6 class="semi-bold-h6 text-color-primary-dark" th:text="'Jadwal saat ini: ' + ${currentJadwal}"></h6>
+                            <table class="table-responsive sibkdTable">
+                                <thead>
+                                <tr>
+                                    <th>Kegiatan</th>
+                                    <th>Periode Waktu</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Input Laporan BKD</td>
+                                        <td style="text-align: center;" th:text="${#temporals.format(jadwal.tanggalDibukaInputLaporanBKD1, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(jadwal.tanggalDitutupInputLaporanBKD1, 'dd MMMM yyyy HH:mm')}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penilaian oleh Asesor</td>
+                                        <td style="text-align: center;" th:text="${#temporals.format(jadwal.tanggalDibukaPenilaianAsesor2, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(jadwal.tanggalDitutupPenilaianAsesor2, 'dd MMMM yyyy HH:mm')}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Perbaikan Laporan BKD</td>
+                                        <td style="text-align: center;" th:text="${#temporals.format(jadwal.tanggalDibukaPerbaikanLaporanBKD3, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(jadwal.tanggalDitutupPerbaikanLaporanBKD3, 'dd MMMM yyyy HH:mm')}"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>Penilaian Ulang Asesor</td>
+                                        <td style="text-align: center;" th:text="${#temporals.format(jadwal.tanggalDibukaPenilaianUlangAsesor4, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(jadwal.tanggalDitutupPenilaianUlangAsesor4, 'dd MMMM yyyy HH:mm')}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="card card-custom">
+                    <div class="card-header card-header-custom">
+                        <div class="heading-with-icon d-flex">
+                            <img width="24px" alt="Jadwal Icon" th:src="@{/image/book-fill.svg}"/>
+                            <h4 class="semi-bold-h4 text-color-title head-dashboard" style="margin-top: auto;margin-bottom: auto;">Pedoman BKD</h4></span>
+                        </div>
+                    </div>
+                    <div class="card-body card-body-custom">
+                        <div class="heading-with-icon">
+                            <img width="16px" alt="Jadwal Icon" class="logo-primary" th:src="@{/image/file-earmark-pdf-fill.svg}"/>
+                            <a th:href="@{https://ristek.link/TestingPedomanBKD}" target="_blank" rel="noopener noreferrer"
+                               class="semi-bold-h5 text-color-primary link-primary">Pedoman BKD Kopertis Wilayah II</a>
+                        </div>
+                        <br>
+                        <div class="heading-with-icon">
+                            <img width="16px" alt="Jadwal" class="logo-primary" th:src="@{/image/file-earmark-pdf-fill.svg}"/>
+                            <a th:href="@{https://ristek.link/TestingPedomanBKD}" target="_blank" rel="noopener noreferrer"
+                               class="semi-bold-h5 text-color-primary link-primary">Petunjuk Manual Penggunaan SI-BKD</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function startTime() {
+        const today = new Date();
+        let h = today.getHours();
+
+        for(i=0;i<=9;i++) {
+            let hcopy = h;
+            if(h==i) {
+                h = '0' + hcopy;
+            }
+        }
+
+        let m = today.getMinutes();
+        let s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('time').innerHTML =  h + ":" + m + ":" + s;
+        setTimeout(startTime, 1000);
+    }
+
+    function checkTime(i) {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+    }
+</script>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

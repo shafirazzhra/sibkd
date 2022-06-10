@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{classpath:static/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{classpath:static/css/sibkd.css}"/>
+    <style>
+        @page { size: A4;}
+
+        @media print {
+            table { page-break-after:avoid;
+                    -fs-table-paginate: paginate;
+                    table-layout:fixed}
+            tr    { page-break-inside:avoid }
+            td    { page-break-inside:auto }
+            thead {  }
+            tbody {  }
+            tfoot { display:table-footer-group }
+        }
+        
+    </style>
+</head>
+<body>
+<div class="container-sm p-5 container-first container-last">
+    <div class="row">
+        <h2 class="text-center">Laporan BKD IAI Tazkia</h2>
+        <h5 class="text-center mb-3" th:text="'Semester ' + ${semester.namaSemester}"></h5>
+        <h3 th:text="'Bidang ' + ${bidang.namaBidang}"></h3>
+
+        <div th:if="${listItem.size() == 0}">
+            <h5>Tidak ada item untuk bidang ini.</h5>
+        </div>
+        <div th:unless="${listItem.size() == 0}">
+            <div>
+                <table class="tg table-responsive sibkdTable custom-item" style="font-size: 12px;">
+                    <thead>
+                        <div>
+                            <tr>
+                                <th class="tg-0pky" rowspan="2" style="font-size: 14px; width: 6%">No</th>
+                                <th class="tg-0pky" rowspan="2" style="font-size: 14px; width: 15%">Jenis Kegiatan</th> 
+                                <th class="tg-0pky" colspan="2" style="font-size: 14px;">Beban Kerja</th>
+                                <th class="tg-0pky" rowspan="2" style="font-size: 14px; width: 14%">Masa Penugasan</th>
+                                <th class="tg-0pky" colspan="2" style="font-size: 14px;">Beban Kinerja</th>
+                            </tr>
+                            <tr>
+                                <th class="tg-0pky" style="font-size: 14px; width: 24%">Bukti Penugasan</th>
+                                <th class="tg-0pky" style="font-size: 14px; width: 7%">SKS</th>
+                                <th class="tg-0pky" style="font-size: 14px; width: 23%">Bukti Kinerja</th>
+                                <th class="tg-0pky" style="font-size: 14px; width: 11%">SKS Capaian</th>
+                            </tr>
+                        </div>
+                    </thead>
+                    <tbody>
+                        <div th:each="item, iterationStatus : ${listItem}">
+                            <tr style="vertical-align:top">
+                                <td class="tg-0pky" rowspan="4" th:text="${iterationStatus.count}" style="width: 6%"></td>
+                                <td class="tg-0pky" th:text="${item.deskripsi}" style="width: 15%"></td>
+                                <td class="tg-0pky" style="width: 24%">
+                                    <p class="mb-1" th:text="${item.namaBuktiPenugasan}"></p>
+                                    <p class="text-color-primary mb-0"><i>Dokumen Penugasan :</i></p>
+                                    <ul style="padding-left:20px">
+                                        <li th:each="dokumen : ${item.listFileBuktiPenugasan}" th:text="${dokumen.name}"  style="width: 120px;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;"></li>
+                                    </ul>
+                                </td>
+                                <td class="tg-0pky" th:text="${item.sks}" style="width: 7%"></td>
+                                <td class="tg-0pky" th:text="${item.masaPenugasan} + ' Semester'" style="width: 14%"></td>
+                                <td class="tg-0pky" style="width: 23%">
+                                    <p class="mb-1" th:text="${item.namaBukti}"></p>
+                                    <p th:if="${item.listFileBukti.size()} > 0" class="text-color-primary mb-0"><i>Dokumen Kinerja :</i></p>
+                                    <ul style="padding-left:20px">
+                                        <li th:each="dokumen : ${item.listFileBukti}" th:text="${dokumen.name}" style="width: 115px;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;"></li>
+                                    </ul>
+                                </td>
+                                <td class="tg-0pky" th:text="${item.sksTerpenuhi}" style="width: 11%"></td>
+                            </tr>
+                            <tr style="vertical-align:top">
+                                <td class="tg-0pky" colspan="4">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark pb-0 mb-0" style="font-size: 14px;">Catatan Asesor 1</h6>
+                                    <p th:unless="${item.catatanAsesor1} == null or ${item.catatanAsesor1} == ''" class="mb-0" th:text="${item.catatanAsesor1}"></p>
+                                    <p th:if="${item.catatanAsesor1} == null or ${item.catatanAsesor1} == ''" class="mb-0">-</p>
+                                </td>
+                                <td class="tg-0pky" colspan="3">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark pb-0 mb-0" style="font-size: 14px;">Rekomendasi Asesor 1</h6>
+                                    <p th:unless="${item.rekomendasiAsesor1} == null or ${item.rekomendasiAsesor1} == ''" class="mb-0" th:text="${item.rekomendasiAsesor1}"></p>
+                                    <p th:if="${item.rekomendasiAsesor1} == null or ${item.rekomendasiAsesor1} == ''" class="mb-0">-</p>
+                                </td>
+                            </tr>
+                            <tr style="vertical-align:top">
+                                <td class="tg-0pky" colspan="4">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark pb-0 mb-0" style="font-size: 14px;">Catatan Asesor 2</h6>
+                                    <p th:unless="${item.catatanAsesor2} == null or ${item.catatanAsesor2} == ''" class="mb-0" th:text="${item.catatanAsesor2}"></p>
+                                    <p th:if="${item.catatanAsesor2} == null or ${item.catatanAsesor2} == ''" class="mb-0">-</p>
+                                </td>
+                                <td class="tg-0pky" colspan="3">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark pb-0 mb-0" style="font-size: 14px;">Rekomendasi Asesor 2</h6>
+                                    <p th:unless="${item.rekomendasiAsesor2} == null or ${item.rekomendasiAsesor2} == ''" class="mb-0" th:text="${item.rekomendasiAsesor2}"></p>
+                                    <p th:if="${item.rekomendasiAsesor2} == null or ${item.rekomendasiAsesor2} == ''" class="mb-0">-</p>
+                                </td>
+                            </tr>
+                            <tr style="vertical-align:top">
+                                <td class="tg-0pky" colspan="7">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark pb-0 mb-0" style="font-size: 14px;">Catatan Kaprodi</h6>
+                                    <p th:unless="${item.komentarKaprodi} == null or ${item.komentarKaprodi} == ''" class="mb-0" th:text="${item.komentarKaprodi}"></p>
+                                    <p th:if="${item.komentarKaprodi} == null or ${item.komentarKaprodi} == ''" class="mb-0">-</p>
+                                </td>
+                            </tr>
+                        </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

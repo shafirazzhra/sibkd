@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Edit Jadwal BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(semester)"></nav>
+
+<div class="container-lg p-5 container-first container-last" >
+    <div class="row justify-content-center">
+        <div class="alert alert-danger w-75" role="alert" th:if="${error}" th:text="${error}"></div>
+        <div class="card w-75">
+            <form th:action="@{/semester/edit}" th:object="${semester}" method="POST">
+
+                <div class="card-header bg-transparent p-3">
+                    <h2 class="card-title text-center">Form Edit Semester</h2>
+                    <h2 class="card-title text-center" th:text="'Semester ' + ${semester.namaSemester}"></h2>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" th:field="*{idSemester}" />
+                    <input type="hidden" th:field="*{jadwalBKD}" />
+                    <!-- Input Semester -->
+
+                        <div class="card-text my-3 row">
+                            <label class="col-sm-4 col-form-label">Jenis Semester</label>
+                            <div class="col-sm-8">
+                                <select class="form-select" th:value="*{ganjilGenap}" required name="ganjilGenap">
+                                    <option value="1">Ganjil</option>
+                                    <option value="2">Genap</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-text my-3 row">
+                            <label class="col-sm-4 col-form-label">Nama Semester</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" th:value="*{namaSemester}" name="namaSemester" required/>
+                            </div>
+                        </div>
+                        <div class="card-text my-3 row">
+                            <label class="col-sm-4 col-form-label">Tanggal Dibuka Semester</label>
+                            <div class="col-sm-8">
+                                <input required class="form-control" type="datetime-local" th:value="*{tanggalDibukaSemester}" name="tanggalDibukaSemester"/>
+                            </div>
+                        </div>
+                        <div class="card-text mb-3 row">
+                            <label class="col-sm-4 col-form-label">Tanggal Ditutup Semester</label>
+                            <div class="col-sm-8">
+                                <input required class="form-control" type="datetime-local" th:value="*{tanggalDitutupSemester}" name="tanggalDitutupSemester"/>
+                            </div>
+                        </div>
+
+
+                <div class="card-footer bg-transparent p-3">
+                    <div class="d-grid d-md-flex justify-content-md-end">
+                        <a class="button-danger-outline me-md-2" th:href="@{/semester/view-all}">Batal</a>
+                        <button type="submit" class="button-success">Simpan</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</body>
+</html>

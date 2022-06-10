@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>500 Error</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(beranda)"></nav>
+<div class="container container-last">
+    <div class="row">
+        <div class="col-lg-12">
+            <br><br><br><br><br>
+            <img th:src="@{/image/500.png}" class="img-responsive center-block d-block mx-auto">
+             <div class="col-sm-12" style="text-align: center;">
+            <br>
+                <h4 class="semi-bold-h4" style="color: #152536; display: inline;">Terjadi kesalahan pada sistem.</h4>
+               <br><br>
+               <div class="btn-tengah">
+                   <a class="button-primary-outline"  href="/">Kembali ke Halaman Utama</a>
+               </div>
+               <br><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+
+</html>

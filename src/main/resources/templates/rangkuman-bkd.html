@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rangkuman BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+
+<body>
+    <nav th:replace="fragments/fragment :: navbar(rangkuman-bkd)"></nav>
+
+    <div class="container-sm p-5" >
+        <div class="row-sm">
+            <br><br><br>
+            <h2 th:text="'Rangkuman BKD'" class="semi-bold-h2"></h2>
+            <div class="position-relative d-flex my-4">
+                <table style="border-collapse: collapse; border: none;" class="body-text text-color-base">
+                    <tr>
+                        <td><p style="margin-bottom: 0px">Nama Lengkap &emsp;</p></td>
+                        <td><p th:text="':&ensp;' + ${dosen.namaDosen}" style="margin-bottom: 0px"></p></td>
+                    </tr>
+                    <tr>
+                        <td><p style="margin-bottom: 5px">NIDN &emsp;</p></td>
+                        <div th:if="${dosen.nidn != null}">
+                            <td><p th:text="':&ensp;' + ${dosen.nidn}" style="margin-bottom: 5px"></p></td>
+                        </div>
+                        <div th:unless="${dosen.nidn != null}">
+                            <td><p th:text="':&ensp;' + ' -'" style="margin-bottom: 5px"></p></td>
+                        </div>
+                    </tr>
+                    <tr>
+                        <td><p style="margin-bottom: 0px">Status Dosen &emsp;</p></td>
+                        <td><p th:text="':&ensp;' + ${dosen.jabstruk.namaJabatanStruktural}" style="margin-bottom: 0px"></p></td>
+                    </tr>
+                    <tr>
+                        <td><p style="margin-bottom: 0px">Semester / TA &emsp;</p></td>
+                        <td>
+                            <p th:if="${semesterId} == null" th:text="':&ensp;' + ${currentSemester.namaSemester}" style="margin-bottom: 0px"></p>
+                            <p th:if="${semesterId} != null" th:text="':&ensp;' + ${selectedSemester.namaSemester}" style="margin-bottom: 0px"></p>
+                        </td>
+                    </tr>
+                    <div th:if="${dosen.listAsesor}">
+                        <tr>
+                            <td><p style="margin-bottom: 0px">Nama Asesor 1 &emsp;</p></td>
+                            <div th:if="${dosen.listAsesor.size() == 0}">
+                                <td><p th:text="':&ensp;-'" style="margin-bottom: 0px"></p></td>
+                            </div>
+                            <div th:unless="${dosen.listAsesor.size() == 0}">
+                                <td><p th:if="${dosen.listAsesor.size() >= 1}" th:text="':&ensp;' + ${dosen.listAsesor[0].namaAsesor}" style="margin-bottom: 0px"></p></td>
+                            </div>
+                        </tr>
+                        <tr>
+                            <td><p style="margin-bottom: 0px">Nama Asesor 2 &emsp;</p></td>
+                            <td th:if="${dosen.listAsesor.size() == 2}"><p th:text="':&ensp;' + ${dosen.listAsesor[1].namaAsesor}" style="margin-bottom: 0px"></p></td>
+                            <td th:unless="${dosen.listAsesor.size() == 2}"><p th:text="':&ensp;-'" style="margin-bottom: 0px"></p></td>
+                        </tr>
+                    </div>
+                </table>
+                <div class="button-atas-kanan" style="position: absolute; bottom:0; right:0">
+                    <form th:action="@{/rangkuman-bkd}" method="GET">
+                        <div class="input-group" >
+                            <div style="margin-top: 5px">
+                                <p class="body-text" style="margin-bottom: 0px">Semester : &ensp;</p></td>
+                            </div>
+                            <div class="input-group-btn search-panel">
+                                <select class="btn dropdown-toggle" name="semesterId" style="border: 1px solid lightgray; width: 175px; height: 38px;" data-toggle="dropdown">
+                                    <option selected th:if="${semesterId} == null" th:value="${currentSemester.idSemester}" th:text="${currentSemester.namaSemester}"></option>
+                                    <option selected th:if="${semesterId} != null" th:value="${selectedSemester.idSemester}" th:text="${selectedSemester.namaSemester}"></option>
+                                    <option th:each= "semester: ${semesterList}"
+                                            th:if= "(${semesterId} == null and ${semester.idSemester} != ${currentSemester.idSemester}) or (${semesterId} != null and ${semester.idSemester} != ${selectedSemester.idSemester})"
+                                            th:value="${semester.idSemester}"
+                                            th:text="${semester.namaSemester}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div style="margin:8px"> </div>
+                            <span class="input-group-btn">
+                            <button class="button-primary" type="submit"  style="height: 38px;">Pilih</button>
+                        </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="tableFixHead">
+            <table class="table-responsive sibkdTable custom-rangkuman">
+                <thead>
+                    <tr>
+                      <th class="tg-0pky" rowspan="2">Jenis Kegiatan</th>
+                      <th class="tg-0pky" rowspan="2">Syarat</th>
+                      <th class="tg-0pky" rowspan="2">Kinerja</th>
+                      <th class="tg-0pky" colspan="4">Rangkuman BKD</th>
+                    </tr>
+                    <tr>
+                        <th class="tg-0pky">Dosen</th>
+                      <th class="tg-0pky">Asesor 1</th>
+                      <th class="tg-0pky">Asesor 2</th>
+                      <th class="tg-0pky">Status Akhir</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="tg-0pky" rowspan="2">Pendidikan</td>
+                      <td class="tg-0pky" rowspan="2">Tidak boleh kosong</td>
+                      <td class="tg-0pky" rowspan="2" th:if="${listSksKinerja[0][0] != null}" th:text="${listSksKinerja[0][0]} + ' SKS'"></td>
+                      <td class="tg-0pky" rowspan="2" th:unless="${listSksKinerja[0][0] != null}">0 SKS</td>
+                      <td class="tg-0pky" rowspan="2" th:text="${listSksKinerja[0][1]}"></td>
+                      <td class="tg-0pky" th:if="${listPenilaianAsesor1[0][0] != null}" th:text="${listPenilaianAsesor1[0][0]} + ' SKS'"></td>
+                      <td class="tg-0pky" th:unless="${listPenilaianAsesor1[0][0] != null}">0 SKS</td>
+                      <td class="tg-0pky" th:if="${listPenilaianAsesor2[0][0] != null}" th:text="${listPenilaianAsesor2[0][0]} + ' SKS'"></td>
+                      <td class="tg-0pky" th:unless="${listPenilaianAsesor2[0][0] != null}">0 SKS</td>
+                      <td class="tg-0pky" rowspan="2" th:if="${listStatusAkhir[0] == 'T'}" style="text-align: center;">
+                        <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Tidak Memenuhi</span>
+                      </td>
+                      <td class="tg-0pky" rowspan="2" th:unless="${listStatusAkhir[0] == 'T'}" style="text-align: center;">
+                        <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Memenuhi</span>
+                      </td>
+                    </tr>
+                    <tr>
+                        <td class="tg-0pky" th:text="${listPenilaianAsesor1[0][1]}"></td>
+                        <td class="tg-0pky" th:text="${listPenilaianAsesor2[0][1]}"></td>
+                    </tr>
+                    <tr>
+                        <td class="tg-0pky" rowspan="2">Penelitian</td>
+                        <td class="tg-0pky" rowspan="2">Boleh kosong</td>
+                        <td class="tg-0pky" rowspan="2" th:if="${listSksKinerja[1][0] != null}" th:text="${listSksKinerja[1][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" rowspan="2" th:unless="${listSksKinerja[1][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" rowspan="2" th:text="${listSksKinerja[1][1]}"></td>
+                        <td class="tg-0pky" th:if="${listPenilaianAsesor1[1][0] != null}" th:text="${listPenilaianAsesor1[1][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" th:unless="${listPenilaianAsesor1[1][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" th:if="${listPenilaianAsesor2[1][0] != null}" th:text="${listPenilaianAsesor2[1][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" th:unless="${listPenilaianAsesor2[1][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" rowspan="2" th:if="${listStatusAkhir[1] == 'T'}" style="text-align: center;">
+                            <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Tidak Memenuhi</span>
+                          </td>
+                          <td class="tg-0pky" rowspan="2" th:unless="${listStatusAkhir[1] == 'T'}" style="text-align: center;">
+                            <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Memenuhi</span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="tg-0pky" th:text="${listPenilaianAsesor1[1][1]}"></td>
+                          <td class="tg-0pky" th:text="${listPenilaianAsesor2[1][1]}"></td>
+                      </tr>
+                      <tr>
+                        <td class="tg-0pky" rowspan="2">Pengabdian</td>
+                        <td class="tg-0pky" rowspan="2">Boleh kosong</td>
+                        <td class="tg-0pky" rowspan="2" th:if="${listSksKinerja[2][0] != null}" th:text="${listSksKinerja[2][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" rowspan="2" th:unless="${listSksKinerja[2][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" rowspan="2" th:text="${listSksKinerja[2][1]}"></td>
+                        <td class="tg-0pky" th:if="${listPenilaianAsesor1[2][0] != null}" th:text="${listPenilaianAsesor1[2][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" th:unless="${listPenilaianAsesor1[2][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" th:if="${listPenilaianAsesor2[2][0] != null}" th:text="${listPenilaianAsesor2[2][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" th:unless="${listPenilaianAsesor2[2][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" rowspan="2" th:if="${listStatusAkhir[2] == 'T'}" style="text-align: center;">
+                            <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Tidak Memenuhi</span>
+                          </td>
+                          <td class="tg-0pky" rowspan="2" th:unless="${listStatusAkhir[2] == 'T'}" style="text-align: center;">
+                            <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Memenuhi</span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="tg-0pky" th:text="${listPenilaianAsesor1[2][1]}"></td>
+                          <td class="tg-0pky" th:text="${listPenilaianAsesor2[2][1]}"></td>
+                      </tr>
+                    <tr>
+                        <td class="tg-0pky" rowspan="2">Pendidikan + Penelitian</td>
+                        <td class="tg-0pky" rowspan="2">Sesuai Pedoman</td>
+                        <td class="tg-0pky" rowspan="2" th:if="${listSksKinerja[4][0] != null}" th:text="${listSksKinerja[4][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" rowspan="2" th:unless="${listSksKinerja[4][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" rowspan="2" th:text="${listSksKinerja[4][1]}"></td>
+                        <td class="tg-0pky" th:if="${listPenilaianAsesor1[4][0] != null}" th:text="${listPenilaianAsesor1[4][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" th:unless="${listPenilaianAsesor1[4][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" th:if="${listPenilaianAsesor2[4][0] != null}" th:text="${listPenilaianAsesor2[4][0]} + ' SKS'"></td>
+                        <td class="tg-0pky" th:unless="${listPenilaianAsesor2[4][0] != null}">0 SKS</td>
+                        <td class="tg-0pky" rowspan="2" th:if="${listStatusAkhir[4] == 'T'}" style="text-align: center;">
+                            <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Tidak Memenuhi</span>
+                          </td>
+                          <td class="tg-0pky" rowspan="2" th:unless="${listStatusAkhir[4] == 'T'}" style="text-align: center;">
+                            <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Memenuhi</span>
+                          </td>
+                        </tr>
+                        <tr>
+                            <td class="tg-0pky" th:text="${listPenilaianAsesor1[4][1]}"></td>
+                            <td class="tg-0pky" th:text="${listPenilaianAsesor2[4][1]}"></td>
+                        </tr>
+                        <tr>
+                            <td class="tg-0pky" rowspan="2">Pengabdian + Penunjang</td>
+                            <td class="tg-0pky" rowspan="2">Sesuai Pedoman</td>
+                            <td class="tg-0pky" rowspan="2" th:if="${listSksKinerja[5][0] != null}" th:text="${listSksKinerja[5][0]} + ' SKS'"></td>
+                            <td class="tg-0pky" rowspan="2" th:unless="${listSksKinerja[5][0] != null}">0 SKS</td>
+                            <td class="tg-0pky" rowspan="2" th:text="${listSksKinerja[5][1]}"></td>
+                            <td class="tg-0pky" th:if="${listPenilaianAsesor1[5][0] != null}" th:text="${listPenilaianAsesor1[5][0]} + ' SKS'"></td>
+                            <td class="tg-0pky" th:unless="${listPenilaianAsesor1[5][0] != null}">0 SKS</td>
+                            <td class="tg-0pky" th:if="${listPenilaianAsesor2[5][0] != null}" th:text="${listPenilaianAsesor2[5][0]} + ' SKS'"></td>
+                            <td class="tg-0pky" th:unless="${listPenilaianAsesor2[5][0] != null}">0 SKS</td>
+                            <td class="tg-0pky" rowspan="2" th:if="${listStatusAkhir[5] == 'T'}" style="text-align: center;">
+                                <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Tidak Memenuhi</span>
+                              </td>
+                              <td class="tg-0pky" rowspan="2" th:unless="${listStatusAkhir[5] == 'T'}" style="text-align: center;">
+                                <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Memenuhi</span>
+                              </td>
+                            </tr>
+                            <tr>
+                                <td class="tg-0pky" th:text="${listPenilaianAsesor1[5][1]}"></td>
+                                <td class="tg-0pky" th:text="${listPenilaianAsesor2[5][1]}"></td>
+                            </tr>
+                            <tr>
+                                <td class="tg-0pky" rowspan="2">Total Kinerja</td>
+                                <td class="tg-0pky" rowspan="2">Sesuai Pedoman</td>
+                                <td class="tg-0pky" rowspan="2" th:if="${listSksKinerja[6][0] != null}" th:text="${listSksKinerja[6][0]} + ' SKS'"></td>
+                                <td class="tg-0pky" rowspan="2" th:unless="${listSksKinerja[6][0] != null}">0 SKS</td>
+                                <td class="tg-0pky" rowspan="2" th:text="${listSksKinerja[6][1]}"></td>
+                                <td class="tg-0pky" th:if="${listPenilaianAsesor1[6][0] != null}" th:text="${listPenilaianAsesor1[6][0]} + ' SKS'"></td>
+                                <td class="tg-0pky" th:unless="${listPenilaianAsesor1[6][0] != null}">0 SKS</td>
+                                <td class="tg-0pky" th:if="${listPenilaianAsesor2[6][0] != null}" th:text="${listPenilaianAsesor2[6][0]} + ' SKS'"></td>
+                                <td class="tg-0pky" th:unless="${listPenilaianAsesor2[6][0] != null}">0 SKS</td>
+                                <td class="tg-0pky" rowspan="2" th:if="${listStatusAkhir[6] == 'T'}" style="text-align: center;">
+                                    <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Tidak Memenuhi</span>
+                                  </td>
+                                  <td class="tg-0pky" rowspan="2" th:unless="${listStatusAkhir[6] == 'T'}" style="text-align: center;">
+                                    <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Memenuhi</span>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="tg-0pky" th:text="${listPenilaianAsesor1[6][1]}"></td>
+                                  <td class="tg-0pky" th:text="${listPenilaianAsesor2[6][1]}"></td>
+                              </tr>
+                  </tbody>
+            </table>
+        </div>
+        <br>
+        <h5 th:text="'Keterangan'" class="semi-bold-h5"></h5>
+        <table style="border-collapse: collapse; border: none;" class="body-text text-color-base">
+            <tr>
+                <td><p style="margin-bottom: 0px">M</p></td>
+                <td><p th:text="':&ensp; Memenuhi Kriteria'" style="margin-bottom: 0px"></p></td>
+            </tr>
+            <tr>
+                <td><p style="margin-bottom: 5px">T</p></td>
+                <td><p th:text="':&ensp; Tidak Memenuhi Kriteria'" style="margin-bottom: 5px"></p></td>
+            </tr>
+        </table>
+    </div>
+    <br><br><br>
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

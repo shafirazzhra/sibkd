@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SI-BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    
+</head>
+
+<body style="min-height: 100vh; position: relative;">
+    <nav th:replace="fragments/fragment :: navbar(beranda)"></nav>
+
+    <div class="container-fluid pb-5 container-first" style="margin-bottom: 15.36vh;">
+        <div class="container container-first">
+            <br><br><br>
+            <div class="row">
+                <div class="col-md-7">
+                    <br><br>
+                    <img id ="aset" class="img-fluid" th:src="@{/image/asset 1.png}"/>
+                </div>
+                <div class="col-md-5">
+                    <div style="margin-right:auto;margin-left:auto;">
+                        <h1 id="selamat"> Selamat datang di</h1>
+                        <h2 id="judul">SISTEM INFORMASI BEBAN KERJA DOSEN (SI-BKD)</h2>
+                        <br>
+                        <h3 id="iai">Institut Agama Islam Tazkia</h3>
+                        <br>
+                        <a id="button-google" class="btn" th:href= "@{/oauth2/authorization/google}" role="button" style="text-transform:none" >
+                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                            Masuk dengan Google
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-primer-superlight bg-image" style="height: 96vh;">
+        <div class="container">
+                <br><br><br>
+                <div class="row">
+                    <div class="col-md-7">
+                        <h1 class="extrabold-h1 text-color-base">Tentang SI-BKD</h1>
+                        <br>
+                        <p class="body-text text-color-base" style="font-size: 20px;">
+                            Sistem Beban Kerja Dosen (SI-BKD) adalah sistem aplikasi yang ditujukan sebagai media online
+                            bagi dosen di lingkungan IAI Tazkia untuk memasukkan data Beban Kerja Dosen (BKD).
+                            Melalui sistem ini, diharapkan institut dapat memperoleh data BKD secara berkelanjutan untuk
+                            dapat dipergunakan pada kepentingan analisis data dan tren pada kegiatan dosen.
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <img id="logo-animation" class="img-fluid" th:src="@{/image/logo-animation.png}">
+                    </div>
+                </div>
+            </div>
+    </div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-main"></footer>
+
+</html>

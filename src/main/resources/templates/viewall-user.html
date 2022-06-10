@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Pengguna</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(user)"></nav>
+<div class="container-sm p-5 container-first container-last" >
+    <div class="row-sm">
+        <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+        <br>
+        <h2><b>Daftar Pengguna SI-BKD</b></h2>
+        <br><br>
+        <form th:action="@{/user}">
+            <div class="input-group" >
+                <div class="input-group-btn search-panel">
+                    <select class="btn dropdown-toggle" name="namaRole" style="border: 1px solid lightgray; width: 175px; height: 38px;" data-toggle="dropdown">
+                        <option th:if="${namaRole}== null" value="All">All</option>
+                        <option th:if="${namaRole}!= null" th:value="${namaRole}" th:text="${namaRole}"></option>
+                        <option th:if="${namaRole}!= 'All' and ${namaRole}!= null" value="All">All</option>
+                        <option th:each= "role: ${listRole}"
+                                th:if="${namaRole}!= ${role.namaRole}"
+                                th:value="${role.namaRole}"
+                                th:text="${role.namaRole}">
+                        </option>
+                    </select>
+                </div>
+                <div style="margin:8px"> </div>
+
+                <input type= "text" class="form-control" style="border-radius:4px; height: 38px;" name="keyword" th:value="${keyword}" placeholder="Cari pengguna berdasarkan nama, email, atau role">
+                <div style="margin:8px"> </div>
+                <span class="input-group-btn">
+                <button class="button-primary" type="submit"  style="height: 38px;">Cari</button>
+            </span>
+            </div>
+        </form>
+
+        <br>
+
+        <div th:unless= "${listUser.size() == 0}" class="tableFixHead">
+            <table id="example" class="table-responsive sibkdTable">
+                <thead>
+                <tr class="text-center">
+                    <th scope="col" width="5%">No.</th>
+                    <th scope="col" width="60%">Nama Lengkap</th>
+                    <th scope="col" width="20%">Email</th>
+                    <th scope="col" width="20%">Role</th>
+                    <th scope="col" width="15%" colspan="2">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, iterationStatus : ${listUser}">
+                    <th style="text-align: center;" width="5%" th:text="${iterationStatus.count}"></th>
+                    <td width="60%" th:text="${user.namaPengguna}"></td>
+                    <td width="20%" th:text="${user.emailPengguna}"></td>
+                    <td style="text-align: center;" width="20%" th:text="${user.role.namaRole}"></td>
+                    <td class="text-center">
+                        <a type="button" class="button-primary" style="display: inline;" th:href="@{/user/} + ${user.emailPengguna}">Detail</a>
+                    </td>
+                    <td class="text-center">
+                        <a th:unless="${user.role.idRole == 3}" class="button-secondary" style="display: inline;" th:href="@{/user/edit/} + ${user.emailPengguna}">Edit</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:unless = "${listUser.size()!=0}">
+            <br>
+            <h4 style="text-align: center;">Tidak ada pengguna dengan keyword tersebut.</h4>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

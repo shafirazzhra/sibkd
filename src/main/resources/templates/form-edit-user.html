@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Pengguna</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(user)"></nav>
+
+<div class="container-sm p-5 container-first container-last" >
+    <div class="row justify-content-center">
+        <div class="card w-75">
+
+            <form th:action="@{/user/edit}" th:object="${user}" method="POST">
+
+                <input type="hidden" th:field="*{idPengguna}" />
+                <input type="hidden" th:field="*{emailPengguna}" />
+
+                <div class="card-body m-5">
+                    <h2 class="card-title text-center">Detail Pengguna</h2>
+                    <br class="card-text">
+
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-3 col-form-label">Nama Lengkap</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="namaPengguna" th:value="*{namaPengguna}">
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-3 col-form-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="emailBaru" th:value="*{emailPengguna}">
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-3 col-form-label">Telepon</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="tel" name="noTelp" th:value="*{noTelp}" pattern="[0-9]{10,12}" title="Masukkan 10 sampai 12 digit">
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-3 col-form-label">Alamat</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" type="text" name="alamat" th:text="*{alamat}"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-3 col-form-label">Role</label>
+                        <div class="col-sm-9">
+                            <select th:value="*{role.idRole}" name="role" class="form-select" >
+                                <option selected th:value="*{role.idRole}" th:text="*{role.namaRole}"></option>
+                                <option th:each="role: ${listRole}"
+                                        th:value="${role.idRole}"
+                                        th:if="*{role.namaRole}!= ${role.namaRole}"
+                                        th:text="${role.namaRole}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer bg-transparent p-3">
+                    <div class="d-grid d-md-flex justify-content-md-end">
+                        <a class="button-danger-outline me-md-2" style="display: inline;"  href="/user">Batal</a>
+                        <button type="submit" class="button-success">Simpan</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Edit Asesor</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(pelaporan-bkd)"></nav>
+
+<div class="container-lg p-5 container-first container-last" >
+    <div class="row justify-content-center">
+        <div class="alert alert-danger w-50" role="alert" th:if="${error}" th:text="${error}"></div>
+    </div>
+    <div class="row justify-content-center">
+
+        <div class="card w-50">
+
+            <form th:action="@{/pelaporan-bkd/edit-asesor/{emailDosen}}" th:object="${dosen}" method="POST">
+
+                <div class="card-header bg-transparent p-3">
+                    <h2 class="card-title text-center">Form Edit Asesor</h2>
+                    <h2 class="card-title text-center" th:text="'Dosen ' + ${dosen.namaDosen}"></h2>
+                </div>
+                <div class="card-body">
+
+                    <input type="hidden" th:field="*{idDosen}" />
+                    <input type="hidden" th:field="*{jabstruk}" />
+                    <input type="hidden" th:field="*{emailDosen}" />
+                    <input type="hidden" th:field="*{namaDosen}" />
+
+                    <div class="card-text my-3 row">
+                        <label class="col-sm-3 col-form-label">Asesor 1<span style="color: red">*</span></label>
+                        <div class="col-sm-9">
+                            <select name="asesor" required class="form-select" th:field="*{listAsesor}">
+                                <option th:each="asesor : ${listAsesor1}" th:value="${asesor.idAsesor}" th:text="${asesor.namaAsesor}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-text my-3 row">
+                        <label class="col-sm-3 col-form-label">Asesor 2</label>
+                        <div class="col-sm-9">
+                            <select name="asesor" class="form-select" th:field="*{listAsesor}">
+                                <option th:each="asesor : ${listAsesor2}" th:value="${asesor.idAsesor}" th:text="${asesor.namaAsesor}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-text my-3 row">
+                        <p class="body-text text-color-base font-italic" style="font-size: 12px;"><i>Ket: Asesor 1 dan Asesor 2 tidak bisa sama.</i></p>
+                    </div>
+
+                </div>
+
+                <div class="card-footer bg-transparent p-3">
+                    <div class="d-grid d-md-flex justify-content-md-end">
+                        <a class="btn btn-outline-danger me-md-2" th:href="@{/pelaporan-bkd/view-all}">Batal</a>
+                        <button type="submit" class="btn btn-success">Simpan</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Detail Item BKD Dosen - ' + ${dosen.namaDosen}"></title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(${assessment})"></nav>
+<div class="container-sm p-5 container-first container-last" >
+    <br>
+    <h2 class="semi-bold-h2" style="margin-bottom: 20px;">Detail Assessment Dosen</h2>
+    <br>
+    <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+    <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+    <br>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="float-start">
+                    <img th:unless="${dosen.urlFoto == null}" class="float-end mb-3" th:src="${foto}" width="250" height="250" style="object-fit: cover;">
+                    <img th:if="${dosen.urlFoto == null}" class="float-end mb-3" src="https://dummyimage.com/sqrpop" width="250" height="250">
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <table style="border-collapse: collapse; border: none;" class="body-text text-color-base">
+                    <tr>
+                        <td style="padding-right: 15px">Nama Lengkap</td>
+                        <td th:text="': ' + ${dosen.namaDosen}"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">NIDN</td>
+                        <td th:unless="${dosen.nidn} == null or ${dosen.nidn} == ''" th:text="': ' + ${dosen.nidn}"></td>
+                        <td th:if="${dosen.nidn} == null or ${dosen.nidn} == ''">: -</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">No. Serdos</td>
+                        <td th:unless="${dosen.noSerdos} == null or ${dosen.noSerdos} == ''" th:text="': ' + ${dosen.noSerdos}"></td>
+                        <td th:if="${dosen.noSerdos} == null or ${dosen.noSerdos} == ''">: -</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">Fakultas</td>
+                        <td th:unless="${dosen.fakultas} == null or ${dosen.fakultas} == ''" th:text="': ' + ${dosen.fakultas}"></td>
+                        <td th:if="${dosen.fakultas} == null or ${dosen.fakultas} == ''">: -</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">Program Studi</td>
+                        <td th:unless="${dosen.prodi} == null or ${dosen.prodi} == ''" th:text="': ' + ${dosen.prodi}"></td>
+                        <td th:if="${dosen.prodi} == null or ${dosen.prodi} == ''">: -</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">Jabatan Fungsional</td>
+                        <td th:unless="${dosen.jabatanFungsional} == null or ${dosen.jabatanFungsional} == ''" th:text="': ' + ${dosen.jabatanFungsional}"></td>
+                        <td th:if="${dosen.jabatanFungsional} == null or ${dosen.jabatanFungsional} == ''">: -</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">Asesor 1</td>
+                        <td th:if="${dosen.listAsesor.size() > 0 }" th:text="': ' + ${dosen.listAsesor.get(0).namaAsesor}"></td>
+                        <td th:unless="${dosen.listAsesor.size() > 0 }">: -</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 15px">Asesor 2</td>
+                        <td th:if="${dosen.listAsesor.size() == 2 }" th:text="': ' + ${dosen.listAsesor.get(1).namaAsesor}"></td>
+                        <td th:unless="${dosen.listAsesor.size() == 2 }">: -</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="position-relative d-flex my-4">
+                    <div>
+                        <a type="button" class="button-primary" style="display: inline;" th:href="@{/assessment/list}">Kembali</a>
+                    </div>
+
+                    <div class="button-atas-kanan" style="position: absolute; bottom:0; right:0">
+                        <form th:action="@{/assessment/detail/__${dosen.emailDosen}__}">
+                            <div class="input-group" >
+                                <div style="margin-top: 5px">
+                                    <p class="body-text" style="margin-bottom: 0px">Bidang : &ensp;</p>
+                                </div>
+                                <div class="input-group-btn search-panel">
+                                    <select class="btn dropdown-toggle" name="namaBidang" style="border: 1px solid lightgray; width: 175px; height: 38px;" data-toggle="dropdown">
+                                        <option th:if="${namaBidang} != null" th:value="${namaBidang}" th:text="${namaBidang}"></option>
+                                        <option th:each= "bidang: ${namaBidangList}"
+                                                th:if="${namaBidang} != ${bidang}"
+                                                th:value="${bidang}"
+                                                th:text="${bidang}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div style="margin-top: 5px;margin-left: 15px">
+                                    <p class="body-text" style="margin-bottom: 0px">Semester : &ensp;</p>
+                                </div>
+                                <div class="input-group-btn search-panel">
+                                    <select class="btn dropdown-toggle" name="semesterId" style="border: 1px solid lightgray; height: 38px;" data-toggle="dropdown">
+                                        <option selected th:if="${semesterId} == null" th:value="${currentSemester.idSemester}" th:text="${currentSemester.namaSemester}"></option>
+                                        <option selected th:if="${semesterId} != null" th:value="${selectedSemester.idSemester}" th:text="${selectedSemester.namaSemester}"></option>
+                                        <option th:each= "semester: ${semesterList}"
+                                                th:if="(${semesterId} == null and ${semester.idSemester} != ${currentSemester.idSemester}) or (${semesterId} != null and ${semester.idSemester} != ${selectedSemester.idSemester})"
+                                                th:value="${semester.idSemester}"
+                                                th:text="${semester.namaSemester}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <span class="input-group-btn">
+                            <button class="button-primary" type="submit" style="height: 38px; margin-left: 10px">Filter</button>
+                        </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tableFixHead">
+                    <table class="table-responsive sibkdTable custom-assessment">
+                        <thead>
+                        <tr>
+                            <th class="tg-0pky" rowspan="2">No</th>
+                            <th class="tg-0pky" rowspan="2">Jenis Kegiatan</th>
+                            <th class="tg-0pky" rowspan="2">Bidang</th>
+                            <th class="tg-0pky" colspan="2">Beban Kerja</th>
+                            <th class="tg-0pky" rowspan="2">Masa Penugasan</th>
+                            <th class="tg-0pky" colspan="2">Beban Kinerja</th>
+                            <th class="tg-0pky" rowspan="2">Status Penilaian</th>
+                            <th class="tg-0pky" rowspan="2">Action</th>
+                        </tr>
+                        <tr>
+                            <th class="tg-0pky">Bukti Penugasan</th>
+                            <th class="tg-0pky">SKS</th>
+                            <th class="tg-0pky">Bukti Kinerja</th>
+                            <th class="tg-0pky">SKS Capaian</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="item, iterationStatus : ${listItem}">
+                            <tr>
+                                <td class="tg-0pky" rowspan="2" th:text="${iterationStatus.count}"></td>
+                                <td class="tg-0pky" th:text="${item.deskripsi}"></td>
+                                <td class="tg-0pky" th:text="${item.bidang.namaBidang}"></td>
+                                <td class="tg-0pky">
+                                    <p class="mb-0" th:text="${item.namaBuktiPenugasan}"></p>
+                                    <p th:if="${item.listFileBuktiPenugasan.size()} > 0" class="text-color-primary mb-0"><i>Dokumen Penugasan :</i></p>
+                                    <div th:each="dokumen : ${item.listFileBuktiPenugasan}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+                                        <a class="text-color-primary link-primary" th:text="'&ensp;&bull;&ensp;'+ ${dokumen.name}" th:href="${dokumen.urlView}" th:target="_blank"></a>
+                                    </div>
+                                </td>
+                                <td class="tg-0pky" th:text="${item.sks}"></td>
+                                <td class="tg-0pky" th:text="${item.masaPenugasan} + ' Semester'"></td>
+                                <td class="tg-0pky">
+                                    <p class="mb-0" th:text="${item.namaBukti}"></p>
+                                    <p th:if="${item.listFileBukti.size()} > 0" class="text-color-primary mb-0"><i>Dokumen Kinerja :</i></p>
+                                    <div th:each="dokumen : ${item.listFileBukti}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+                                        <a class="text-color-primary link-primary" th:text="'&ensp;&bull;&ensp;'+ ${dokumen.name}" th:href="${dokumen.urlView}" th:target="_blank"></a>
+                                    </div>
+                                </td>
+                                <td class="tg-0pky" th:text="${item.sksTerpenuhi}"></td>
+                                <td class="tg-0pky" rowspan="2" th:if="${roleAssess.equals('asesor1')}">
+                                    <span th:if="${item.rekomendasiAsesor1} == 'Selesai' or ${item.rekomendasiAsesor1} == 'Gagal'" class="badge rounded-pill bg-success" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Sudah Selesai</span>
+                                    <span th:unless="${item.rekomendasiAsesor1} == 'Selesai' or ${item.rekomendasiAsesor1} == 'Gagal'" class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Belum Selesai</span>
+                                </td>
+                                <td class="tg-0pky" rowspan="2" th:if="${roleAssess.equals('asesor2')}">
+                                    <span th:if="${item.rekomendasiAsesor2} == 'Selesai' or ${item.rekomendasiAsesor2} == 'Gagal'" class="badge rounded-pill bg-success" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Sudah Selesai</span>
+                                    <span th:unless="${item.rekomendasiAsesor2} == 'Selesai' or ${item.rekomendasiAsesor2} == 'Gagal'" class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Belum Selesai</span>
+                                </td>
+                                <td class="tg-0pky" rowspan="2" th:if="${roleAssess.equals('kaprodi')}">
+                                    <span th:unless="${item.komentarKaprodi} == null or ${item.komentarKaprodi} == ''" class="badge rounded-pill bg-success" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Sudah Selesai</span>
+                                    <span th:if="${item.komentarKaprodi} == null or ${item.komentarKaprodi} == ''" class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Belum Selesai</span>
+                                </td>
+                                <td class="tg-0pky text-center" rowspan="2" th:if="${bisaAssess}">
+                                    <a type="button" class="button-secondary" style="display: inline-block;" th:href="@{/assessment/__${dosen.emailDosen}__/edit/__${item.idItem}__}">Edit</a>
+                                </td>
+                                <td class="tg-0pky text-center" rowspan="2" th:unless="${bisaAssess}">
+                                    <i class="fa fa-ban" style="font-size:30px;color:red;"></i>
+                                </td>
+                            </tr>
+                            <tr th:if="${roleAssess.equals('asesor1')}">
+                                <td class="tg-0pky" colspan="4">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Anda (Asesor 1) :</h6>
+                                    <p th:unless="${item.catatanAsesor1} == null or ${item.catatanAsesor1} == ''" class="mb-0" th:text="${item.catatanAsesor1}"></p>
+                                    <p th:if="${item.catatanAsesor1} == null or ${item.catatanAsesor1} == ''" class="mb-0"><span style="color: red; font-weight: bold">Belum Ada</span></p>
+                                </td>
+                                <td class="tg-0pky" colspan="3">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark">Rekomendasi Anda (Asesor 1) :</h6>
+                                    <p th:unless="${item.rekomendasiAsesor1} == null or ${item.rekomendasiAsesor1} == 'Belum Ada' or ${item.rekomendasiAsesor1} == ''" class="mb-0" th:text="${item.rekomendasiAsesor1}"></p>
+                                    <p th:if="${item.rekomendasiAsesor1} == null or ${item.rekomendasiAsesor1} == 'Belum Ada' or ${item.rekomendasiAsesor1} == ''" class="mb-0"><span style="color: red; font-weight: bold">Belum Ada</span></p>
+                                </td>
+                            </tr>
+                            <tr th:if="${roleAssess.equals('asesor2')}">
+                                <td class="tg-0pky" colspan="4">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Anda (Asesor 2) :</h6>
+                                    <p th:unless="${item.catatanAsesor2} == null or ${item.catatanAsesor2} == ''" class="mb-0" th:text="${item.catatanAsesor2}"></p>
+                                    <p th:if="${item.catatanAsesor2} == null or ${item.catatanAsesor2} == ''" class="mb-0"><span style="color: red; font-weight: bold">Belum Ada</span></p>
+                                </td>
+                                <td class="tg-0pky" colspan="3">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark">Rekomendasi Anda (Asesor 2) :</h6>
+                                    <p th:unless="${item.rekomendasiAsesor2} == null or ${item.rekomendasiAsesor2} == 'Belum Ada' or ${item.rekomendasiAsesor2} == ''" class="mb-0" th:text="${item.rekomendasiAsesor2}"></p>
+                                    <p th:if="${item.rekomendasiAsesor2} == null or ${item.rekomendasiAsesor2} == 'Belum Ada' or ${item.rekomendasiAsesor2} == ''" class="mb-0"><span style="color: red; font-weight: bold">Belum Ada</span></p>
+                                </td>
+                            </tr>
+                            <tr th:if="${roleAssess.equals('kaprodi')}">
+                                <td class="tg-0pky" colspan="7">
+                                    <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Anda (Kaprodi) :</h6>
+                                    <p th:unless="${item.komentarKaprodi} == null or ${item.komentarKaprodi} == ''" class="mb-0" th:text="${item.komentarKaprodi}"></p>
+                                    <p th:if="${item.komentarKaprodi} == null or ${item.komentarKaprodi} == ''" class="mb-0"><span style="color: red; font-weight: bold">Belum Ada</span></p>
+                                </td>
+                            </tr>
+                        </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

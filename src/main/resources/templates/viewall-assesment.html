@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Assesment</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(assessment)"></nav>
+<div class="container-sm p-5 container-first container-last" >
+    <div class="row-sm">
+        <br>
+        <h2><b>List Assesment</b></h2>
+        <br><br>
+        <form th:action="@{/assessment/list}">
+          <div class="input-group" >
+            <div class="input-group-btn search-panel">
+                <select class="btn dropdown-toggle" name="status" style="border: 1px solid lightgray; width: 175px; height: 38px;" data-toggle="dropdown">
+                    <option th:if="${status}== null" value="All">All</option>
+                    <option th:if="${status}!= null" th:value="${status}" th:text="${status}"></option>
+                    <option th:if="${status}!= 'All' and ${status}!= null" value="All">All</option>
+                    <option th:each= "st: ${listStatus}"
+                    th:if="${status}!= ${st}"
+                    th:value="${st}"
+                    th:text="${st}">
+                    </option>
+                </select>
+            </div>
+            <div style="margin:8px">
+            </div>
+
+  
+            <input type= "text" class="form-control" style="border-radius:4px; height: 38px;" name="keyword" th:value="${keyword}" placeholder="Cari dosen berdasarkan nama dan status">
+            <div style="margin:8px"> </div>
+            <span class="input-group-btn">
+                <button class="button-primary" type="submit"  style="height: 38px;">Cari</button>
+            </span>
+            
+            
+        </div>
+        </form>
+        
+        
+          <br>
+          <h5 th:text="'Jumlah Dosen yang harus Anda nilai adalah: ' + ${jumlahAssess} + ' Dosen.'"></h5>
+            
+        
+        <div th:unless= "${listUser.size() == 0}" class="tableFixHead">
+        <table class="table-responsive sibkdTable">
+            <thead>
+              <tr class="text-center">
+                <th scope="col" width="5%">No.</th>
+                <th scope="col" width="60%">Nama Lengkap</th>
+                <th scope="col" width="20%">Status</th>
+                <th scope="col" width="15%">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="dosen, iterationStatus : ${listUser}">
+                <th style="text-align: center;" width="5%" th:text="${iterationStatus.count}"></th>
+                <td width="60%"><a th:text="${dosen.namaDosen}" th:href="@{/assessment/detail/__${dosen.emailDosen}__}" style="color: black" href="/"></a></td>
+                 <td  class="text-center" style="text-align: center;" th:unless = "${itemBKDService.getListByDosenAndSemester(dosen, semester).size() == 0}" th:if = "${dosenService.cekStatusAssesment(dosen, user, semester)} == true"> 
+                  <span class="badge rounded-pill bg-sukses" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Sudah Selesai</span>
+               </td>
+               <td  class="text-center" style="text-align: center;" th:if = "${itemBKDService.getListByDosenAndSemester(dosen, semester).size() == 0}"> 
+                <span class="badge rounded-pill bg-secondary" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Belum Ada Item</span>
+             </td>
+               <td  class="text-center" style="text-align: center;" th:unless = "${itemBKDService.getListByDosenAndSemester(dosen, semester).size() == 0}" th:if = "${dosenService.cekStatusAssesment(dosen, user, semester)} == false"> 
+                <span class="badge rounded-pill bg-danger" style="font-weight: 600;height: 1.438rem;font-size: 14px;">Belum Selesai</span>
+             </td>
+               
+                <td class="text-center" th:if="${bisaAssess}" >
+                  <a type="button" class="button-secondary" style="display: inline;" th:href="@{/assessment/detail/__${dosen.emailDosen}__}">Assess</a>
+                </td>
+                <td class="text-center" th:unless="${bisaAssess}">
+                  <i class="fa fa-ban" style="font-size:30px;color:red;"></i>
+                </td>
+    
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div th:unless = "${listUser.size()!=0}">
+          <br>
+            <div class="alert alert-warning text-center" role="alert">
+                <h5>Tidak ada dosen yang ditemukan.</h5>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

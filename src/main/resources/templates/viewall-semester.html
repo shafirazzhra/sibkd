@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Semester SI-BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar(semester)"></nav>
+
+<div class="container-fluid p-5 container-first container-last">
+    <div class="container">
+
+        <div class="row">
+            <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+            <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+        </div>
+
+        <div class="row">
+            <div class="d-flex">
+                <div class="col-md-8">
+                    <h3 class="bold-h3 text-color-title" th:text="'Daftar Semester SI-BKD'"></h3>
+                </div>
+                <a class="button-primary-outline button-atas-kanan" th:href="@{/semester/tambah}">+ Tambah Semester</a>
+
+<!--                <div class="col-md-4 float-end" style="text-align: right;">-->
+<!--&lt;!&ndash;                    <a class="semi-bold-h5 text-color-primary link-primary float-end" th:href="@{/semester/tambah}">+ Tambah Semester</a>&ndash;&gt;-->
+<!--                </div>-->
+            </div>
+
+        </div>
+
+        <div class="row" style="margin-top: 3.2vh;">
+            <div class="col-md-6" th:each="semester, iterationStatus : ${listSemester}"
+                 style="margin-bottom: 24px;">
+                <div class="card card-custom">
+                    <div class="card-header card-header-custom">
+                        <div class="heading-with-icon d-flex">
+                            <img width="24px" alt="Jadwal Icon" th:src="@{/image/calendar-week-fill.svg}"/>
+                            <h4 th:text="${semester.namaSemester}" class="semi-bold-h4 head-dashboard"
+                                style="margin-top: auto;margin-bottom: auto;"
+                                th:classappend="${namaCurrentSemester == semester.namaSemester} ? 'text-color-secondary-dark' : 'text-color-title'"></h4></span>
+                            <a class="button-secondary-outline button-atas-kanan" th:href="@{/semester/edit/} + ${semester.idSemester}">Edit Semester</a>
+                        </div>
+                    </div>
+
+                    <div class="card-body card-body-custom">
+
+                        <div class="d-flex">
+                            <h6 class="semi-bold-h6 text-color-primary-dark" th:text="'Periode semester: '"
+                                th:classappend="${namaCurrentSemester == semester.namaSemester} ? 'text-color-secondary-dark' : 'text-color-primary-dark'"></h6>
+                            <a class="button-secondary button-atas-kanan" th:href="@{/jadwal-bkd/edit/} + ${semester.idSemester}">Edit Jadwal</a>
+                        </div>
+                        <h5 class="semi-bold-h6 text-color-title" th:text="${#temporals.format(semester.tanggalDibukaSemester, 'dd MMMM yyyy')} + ' - ' + ${#temporals.format(semester.tanggalDitutupSemester, 'dd MMMM yyyy')}"></h5>
+
+
+                        <table class="table-responsive sibkdTable" th:classappend="${namaCurrentSemester == semester.namaSemester} ? 'custom-current-semester'">
+                            <thead>
+                            <tr>
+                                <th>Kegiatan</th>
+                                <th>Periode Waktu</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Input Laporan BKD</td>
+                                <td style="text-align: center;" th:text="${#temporals.format(semester.jadwalBKD.tanggalDibukaInputLaporanBKD1, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(semester.jadwalBKD.tanggalDitutupInputLaporanBKD1, 'dd MMMM yyyy HH:mm')}"></td>
+                            </tr>
+                            <tr>
+                                <td>Penilaian oleh Asesor</td>
+                                <td style="text-align: center;" th:text="${#temporals.format(semester.jadwalBKD.tanggalDibukaPenilaianAsesor2, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(semester.jadwalBKD.tanggalDitutupPenilaianAsesor2, 'dd MMMM yyyy HH:mm')}"></td>
+                            </tr>
+                            <tr>
+                                <td>Perbaikan Laporan BKD</td>
+                                <td style="text-align: center;" th:text="${#temporals.format(semester.jadwalBKD.tanggalDibukaPerbaikanLaporanBKD3, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(semester.jadwalBKD.tanggalDitutupPerbaikanLaporanBKD3, 'dd MMMM yyyy HH:mm')}"></td>
+
+                            </tr>
+                            <tr>
+                                <td>Penilaian Ulang Asesor</td>
+                                <td style="text-align: center;" th:text="${#temporals.format(semester.jadwalBKD.tanggalDibukaPenilaianUlangAsesor4, 'dd MMMM yyyy HH:mm')} + ' - ' + ${#temporals.format(semester.jadwalBKD.tanggalDitutupPenilaianUlangAsesor4, 'dd MMMM yyyy HH:mm')}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

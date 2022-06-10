@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Item BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+
+  <script>
+    function validateSize(input, n) {
+      const fileSize = input.files[0].size / 1024; // in KB
+      if (n == 1) {
+          var form = document.getElementById('form1');
+      } else {
+          var form = document.getElementById('form2');
+      }
+      if (fileSize > 500) {
+        event.target.value = '';
+        alert('Ukuran file melebihi 500 KB');
+      } else {
+        input.form.submit()
+      }
+  }
+</script>
+
+<nav th:replace="fragments/fragment :: navbar(${bidang})"></nav>
+<div class="container-sm p-5 container-first container-last" >
+    <div class="row-sm">
+        <div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>
+        <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+        <br>
+        <h2 th:text="'Bidang ' + ${bidang}" class="semi-bold-h2"></h2>
+
+        <div class="position-relative d-flex my-4">
+            <table style="border-collapse: collapse; border: none;" class="body-text text-color-base">
+                <tr>
+                    <td><p style="margin-bottom: 0px">Asesor 1 &emsp;</p></td>
+                    <td th:if="${listAsesor.size()} >= 1"><p th:text="':&ensp;' + ${listAsesor[0].namaAsesor}" style="margin-bottom: 0px"></p></td>
+                    <td th:unless="${listAsesor.size()} >= 1"><p style="margin-bottom: 0px"></p>:&ensp;-</td>
+                </tr>
+                <tr>
+                    <td><p style="margin-bottom: 5px">Asesor 2 &emsp;</p></td>
+                    <td th:if="${listAsesor.size()} == 2"><p th:text="':&ensp;' + ${listAsesor[1].namaAsesor}" style="margin-bottom: 5px"></p></td>
+                    <td th:unless="${listAsesor.size()} == 2"><p style="margin-bottom: 5px">:&ensp;-</p></td>
+                </tr>
+            </table>
+            <div class="button-atas-kanan" style="position: absolute; bottom:0; right:0">
+                <form th:action="@{/item/__${bidang}__/semester/__${currentSemester.idSemester}__}" method="POST">
+                    <div class="input-group" >
+                        <div style="margin-top: 5px">
+                            <p class="body-text" style="margin-bottom: 0px">Semester : &ensp;</p></td>
+                        </div>
+                        <div class="input-group-btn search-panel">
+                            <select class="btn dropdown-toggle" name="semesterId" style="border: 1px solid lightgray; width: 175px; height: 38px;" data-toggle="dropdown">
+                                <option selected th:value="${currentSemester.idSemester}" th:text="${currentSemester.namaSemester}"></option>
+                                <option th:each= "semester: ${semesterList}"
+                                        th:if= "${semester.idSemester} != ${currentSemester.idSemester}"
+                                        th:value="${semester.idSemester}"
+                                        th:text="${semester.namaSemester}">
+                                </option>
+                            </select>
+                        </div>
+                        <div style="margin:8px"> </div>
+                        <span class="input-group-btn">
+                        <button class="button-primary" type="submit"  style="height: 38px;">Pilih</button>
+                    </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="tableFixHead">
+            <table class="table-responsive sibkdTable custom-item ">
+                <thead>
+                    <tr>
+                      <th class="tg-0pky" rowspan="2">No</th>
+                      <th class="tg-0pky" rowspan="2">Jenis Kegiatan</th>
+                      <th class="tg-0pky" colspan="2">Beban Kerja</th>
+                      <th class="tg-0pky" rowspan="2" style="width: 10%;">Masa Penugasan</th>
+                      <th class="tg-0pky" colspan="2">Beban Kinerja</th>
+                      <th class="tg-0pky" rowspan="2">Action</th>
+                    </tr>
+                    <tr>
+                      <th class="tg-0pky">Bukti Penugasan</th>
+                      <th class="tg-0pky">SKS</th>
+                      <th class="tg-0pky">Bukti Kinerja</th>
+                      <th class="tg-0pky">SKS Capaian</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <div th:each="item, iterationStatus : ${listItem}">
+                      <tr style="vertical-align:top">
+                        <td class="tg-0pky" rowspan="4" th:text="${iterationStatus.count}"></td>
+                        <td class="tg-0pky" th:text="${item.deskripsi}"></td>
+                        <td class="tg-0pky">
+                          <p class="mb-0" th:text="${item.namaBuktiPenugasan}"></p>
+                          <p class="text-color-primary mb-0"><i>Dokumen Penugasan :</i></p>
+
+                          <!--ini filenya-->
+                          <div th:each="dokumen : ${item.listFileBuktiPenugasan}">
+                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; display:inline-block; vertical-align:middle"><a class="text-color-primary link-primary" th:text="'&ensp;&bull;&ensp;'+ ${dokumen.name}" th:href="${dokumen.urlView}" th:target="_blank"></a></span>
+                            <span th:if="${bukaInput}"><a data-toggle="modal" th:attr="data-target=${'#delete'+dokumen.id}" data-row="${dokumen}" title="delete"><i class="fa fa-remove" style="color: #DC3545;font-size: 20px; vertical-align:middle; cursor: pointer;"></i></a></span>
+                          
+                            <!--modal-->
+                            <div class="modal fade" th:attr="id=${'delete' + dokumen.id}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Apakah Anda yakin ingin menghapus file dokumen penugasan ini?</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                            <a type="button" class="button-danger mx-2" th:href="@{/item/} + ${item.idItem} + '/penugasan/delete/' + ${dokumen.id}">Hapus</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                          </div>
+
+                          <!--buat nambah file-->
+                          <!-- th:attr="id=${'form' + item.idItem}" -->
+                          <form th:if="${bukaInput}" id="form1"class="mt-2" th:action="@{/item/} + ${item.idItem} + '/addFilePenugasan'" method="post" enctype="multipart/form-data">
+                              <label class="button-primary" style="display:inline; font-size: 12px; line-height: 15px; padding: 5px 8px;">
+                                  Tambah Dokumen <input type="file"  name="file" accept="application/pdf,image/jpeg,image/png" onchange="validateSize(this,1)" hidden>
+                              </label>
+                          </form>
+
+                        </td>
+                        <td class="tg-0pky" th:text="${item.sks}"></td>
+                        <td class="tg-0pky" th:text="${item.masaPenugasan} + ' Semester'"></td>
+                        <td class="tg-0pky">
+                          <p class="mb-0" th:text="${item.namaBukti}"></p>
+                          <p th:if="${item.listFileBukti.size()} > 0" class="text-color-primary mb-0"><i>Dokumen Kinerja :</i></p>
+
+                          <!--ini filenya-->
+                          <div th:each="dokumen : ${item.listFileBukti}">
+                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; display:inline-block; vertical-align:middle"><a class="text-color-primary link-primary" th:text="'&ensp;&bull;&ensp;'+ ${dokumen.name}" th:href="${dokumen.urlView}" th:target="_blank"></a></span>
+                            <span th:if="${bukaInput}"><a data-toggle="modal" th:attr="data-target=${'#delete'+dokumen.id}" data-row="${dokumen}" title="delete"><i class="fa fa-remove" style="color: #DC3545;font-size: 20px; vertical-align:middle; cursor: pointer;"></i></a></span>
+                          
+                            <!--modal-->
+                            <div class="modal fade" th:attr="id=${'delete' + dokumen.id}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus File</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Apakah Anda yakin ingin menghapus file dokumen kinerja ini?</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                            <a type="button" th:href="@{/item/} + ${item.idItem} + '/kinerja/delete/' + ${dokumen.id}" class="button-danger mx-2">Hapus</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+
+                          <!--buat nambah file-->
+                          <form th:if="${bukaInput}" id="form2" class="mt-2" th:action="@{/item/} + ${item.idItem} + '/addFileKinerja'" method="post" enctype="multipart/form-data">
+                              <label class="button-primary" style="display:inline; font-size: 12px; line-height: 15px; padding: 5px 8px;">
+                                  Tambah Dokumen <input type="file" name="file" accept="application/pdf,image/jpeg,image/png" onchange="validateSize(this,2)" hidden>
+                              </label>
+                          </form>
+
+                        </td>
+                        <td class="tg-0pky" th:text="${item.sksTerpenuhi}"></td>
+                        <td class="tg-0pky text-center" rowspan="4" style="vertical-align:middle">
+                          <div>
+                            <!--<i th:unless="${bukaInput} and ${item.rekomendasiAsesor1 != 'Selesai'} and (${listAsesor.size()} != 2 and ${item.rekomendasiAsesor2 != 'Selesai'})" class="fa fa-ban" title="Masa input sudah berakhir atau rekomendasi kedua asesor sudah selesai" style="color: #DC3545; font-size: 30px;" aria-hidden="true"></i>
+                            <a th:if="${bukaInput} and ${item.rekomendasiAsesor1 != 'Selesai'} and (${listAsesor.size()} != 2 and ${item.rekomendasiAsesor2 != 'Selesai'})" class="button-secondary" style="display: inline;" th:href="@{/item/__${bidang}__/} + ${item.idItem} + '/edit'">Edit</a> !-->
+                            <i th:unless="${bukaInput}" class="fa fa-ban" title="Masa input sudah berakhir atau rekomendasi kedua asesor sudah selesai" style="color: #DC3545; font-size: 30px;" aria-hidden="true"></i>
+                            <a th:if="${bukaInput}" class="button-secondary" style="display: inline;" th:href="@{/item/__${bidang}__/} + ${item.idItem} + '/edit'">Edit</a> 
+                            <div class="w-100 mb-4"></div>
+                            <!-- <div th:if="${bukaInput} and ${item.rekomendasiAsesor1 != 'Selesai'} and (${listAsesor.size()} != 2 and ${item.rekomendasiAsesor2 != 'Selesai'})"> !-->
+                            <div th:if="${bukaInput}">
+                              <a type="button" class="button-danger" style="display: inline-block;" data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${item.idItem}">Hapus</a>
+                              <div class="modal fade" th:id="modal-delete+${item.idItem}" >
+                                  <div class="modal-dialog modal-dialog-centered">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <h5 class="modal-title" style="color: #F78100">Konfirmasi Hapus Item BKD</h5>
+                                          </div>
+                                          <div class="modal-body">
+                                              <h5 th:text="'Apakah Anda yakin ingin menghapus itemBKD dengan nomor ' + ${iterationStatus.count} + '?'"></h5>
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="button-primary-outline pull-left" data-dismiss="modal">Batal</button>
+                                              <a type="button" class="button-danger mx-2" th:href="@{/item/__${bidang}__/} + ${item.idItem} + '/delete'">Hapus</a>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                            <!-- <a th:if="${bukaInput}" class="button-danger" style="display: inline;" th:href="@{/item/__${bidang}__/} + ${item.idItem} + '/delete'">Delete</a> -->
+                          </div>
+                        </td>
+                      </tr>
+                      <tr style="vertical-align:top">
+                        <td class="tg-0pky" colspan="4">
+                          <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Asesor 1</h6>
+                          <p th:unless="${item.catatanAsesor1} == null" class="mb-0" th:text="${item.catatanAsesor1}"></p>
+                          <p th:if="${item.catatanAsesor1} == null" class="mb-0">-</p>
+                        </td>
+                        <td class="tg-0pky" colspan="2">
+                          <h6 class="semi-bold-h6 text-color-primary-dark">Rekomendasi Asesor 1</h6>
+                          <p th:unless="${item.rekomendasiAsesor1} == null" class="mb-0" th:text="${item.rekomendasiAsesor1}"></p>
+                          <p th:if="${item.rekomendasiAsesor1} == null" class="mb-0">-</p>
+                        </td>
+                      </tr>
+                      <tr style="vertical-align:top">
+                        <td class="tg-0pky" colspan="4">
+                          <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Asesor 2</h6>
+                          <p th:unless="${item.catatanAsesor2} == null" class="mb-0" th:text="${item.catatanAsesor2}"></p>
+                          <p th:if="${item.catatanAsesor2} == null" class="mb-0">-</p>
+                        </td>
+                        <td class="tg-0pky" colspan="2">
+                          <h6 class="semi-bold-h6 text-color-primary-dark">Rekomendasi Asesor 2</h6>
+                          <p th:unless="${item.rekomendasiAsesor2} == null" class="mb-0" th:text="${item.rekomendasiAsesor2}"></p>
+                          <p th:if="${item.rekomendasiAsesor2} == null" class="mb-0">-</p>
+                        </td>
+                      </tr>
+                      <tr style="vertical-align:top">
+                        <td class="tg-0pky" colspan="6">
+                          <h6 class="semi-bold-h6 text-color-primary-dark">Catatan Kaprodi</h6>
+                          <p th:unless="${item.komentarKaprodi} == null" class="mb-0" th:text="${item.komentarKaprodi}"></p>
+                          <p th:if="${item.komentarKaprodi} == null" class="mb-0">-</p>
+                        </td>
+                      </tr>
+                    </div>
+                  </tbody>
+            </table>
+        </div>
+        <div th:if="${bukaInput}" class="position-relative d-flex my-4">
+            <a class="button-primary-outline" th:href="@{/item/__${bidang}__/add}">+Tambah Item</a>
+        </div>
+        <div th:unless="${bukaInput}" class="position-relative d-flex my-4">
+          <a class="btn button-primary-outline disabled" th:href="@{/item/__${bidang}__/add}" title="Masa input sudah berakhir" aria-disabled="true">+Tambah Item</a>
+        </div>
+        <br><br><br>
+    </div>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>

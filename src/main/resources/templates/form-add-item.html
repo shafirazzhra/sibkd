@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Tambah Item BKD</title>
+    <object th:include="fragments/fragment :: icon" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+</head>
+<body>
+<script>
+    function handleTemplate()
+    {
+        var chooseTemplateField = document.getElementById('chooseTemplate');
+        var template = chooseTemplateField.options[chooseTemplateField.selectedIndex].text;
+        document.getElementsByName('deskripsi')[0].placeholder=template;
+    }
+
+    function validateSize(input, n) {
+        if (n == 1) {
+            var output = document.getElementById('fileList1');
+        } else {
+            var output = document.getElementById('fileList2');
+        }
+        var children = "";
+        for (var i = 0; i < input.files.length; ++i) {
+            const fileSize = input.files[i].size / 1024; // in MB
+            if (fileSize > 500) {
+                event.target.value = '';
+                alert('Ukuran file melebihi 500 kb');
+            } else {
+                children += '<li>' + input.files.item(i).name + '</li>';
+            }
+        }
+        output.innerHTML = '<ul>'+children+'</ul>';
+    }
+</script>
+
+<nav th:replace="fragments/fragment :: navbar(${namaBidang})"></nav>
+<div class="container-sm p-5 container-first container-last">
+    <div class="row justify-content-center">
+        <br>
+        <div class="card w-75">
+            <form th:action="@{/item/__${namaBidang}__/add}" th:object="${item}" method="POST" enctype="multipart/form-data">
+                <div class="card-header bg-transparent p-3" >
+                    <h2 class="card-title text-center" style="text-align: center;">Form Tambah Item BKD</h2>
+                    <h2 class="card-title text-center" th:text="'Bidang ' + ${namaBidang}" style="text-align: center"></h2>
+                </div>
+                <div class="card-body m-3">
+                    <input type="hidden" th:field="*{bidang}" />
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">Jenis Kegiatan</label>
+                        <div class="col-sm-8">
+                            <select id="chooseTemplate" name="kegiatanBKD" class="form-select" onchange="handleTemplate()" required>
+                                <option value="" disabled hidden selected>Pilih Jenis Kegiatan</option>
+                                <option th:each="kegiatan: ${listKegiatan}"
+                                        th:value="${kegiatan.idKegiatan}"
+                                        th:text="${kegiatan.template}"
+                                        th:label="${kegiatan.namaKegiatan}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-text my-3 row">
+                        <label class="col-sm-4 col-form-label">Nama Kegiatan</label>
+                        <div class="col-sm-8">
+                            <textarea rows="4" style="height:100%;" class="form-control" type="text" name="deskripsi" required/></textarea>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">Bukti Penugasan</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" type="text" name="namaBuktiPenugasan" required></textarea>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row" >
+                        <label class="col-sm-4 col-form-label">Dokumen Penugasan</label>
+                        <div class="col-sm-8">
+                            <!--untuk upload multi file-->
+                            <div class="form-group">
+                                <input style="color:transparent; width: 120px;" onchange="validateSize(this, 1)" type="file" name="filePenugasan" class="form-control-file" accept="application/pdf,image/jpeg,image/png" multiple>
+                            </div>
+                            <div style="padding-top:5px" id="fileList1">
+                                <label class="text-muted" style="font-size: 14px;">Ukuran maksimal dokumen : 500 Kb</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">Jumlah SKS</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" name="sks" min="0" required>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">Masa Penugasan</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" type="number" name="masaPenugasan" min="0" required>
+                        </div>
+                        <label class="col-sm-4 col-form-label">Semester</label>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">Bukti Kinerja</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" type="text" name="namaBukti" required></textarea>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row" >
+                        <label class="col-sm-4 col-form-label">Dokumen Kinerja</label>
+                        <div class="col-sm-8">
+                            <!--untuk upload multi file-->
+                            <div class="form-group">
+                                <input style="color:transparent; width: 120px;" onchange="validateSize(this, 2)" type="file" name="fileKinerja" class="form-control-file" accept="application/pdf,image/jpeg,image/png" multiple>
+                            </div>
+                            <div style="padding-top:5px" id="fileList2">
+                                <label class="text-muted" style="font-size: 14px;">Ukuran maksimal dokumen : 500 Kb</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-text mb-3 row">
+                        <label class="col-sm-4 col-form-label">SKS Terpenuhi</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" name="sksTerpenuhi" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent p-3">
+                    <div class="d-grid d-md-flex justify-content-md-end">
+                        <a class="button-danger-outline me-md-2" th:href="@{/item/__${namaBidang}__}">Batal</a>
+                        <button type="submit" class="button-success">Tambah</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <br><br><br>
+</div>
+
+</body>
+<footer th:replace="fragments/fragment :: footer-all"></footer>
+</html>
